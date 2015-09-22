@@ -9,7 +9,17 @@ module.exports = function(models, lib) {
         success: true,
         message: 'Welcome to Bridges'
       })
+    },
+
+    github: function(req, res, next) {
+      console.log(req.body)
+
+      res.status(200).send({
+        success: true,
+        message: 'Welcome to Bridges'
+      })
     }
+
   }
 }
 
