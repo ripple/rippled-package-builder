@@ -56,7 +56,7 @@ module.exports = function(models, lib) {
 
     github: function(req, res, next) {
 
-      var event = parseEvent(payload)
+      var event = parseEvent(req.body)
 
       if (event) {
         console.log(event.toString())
