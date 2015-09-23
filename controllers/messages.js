@@ -25,15 +25,15 @@ class ReleaseEvent extends GithubEvent {
 }
 
 class PullRequestEvent extends GithubEvent {
-  var merged
-
-  if (this.payload.action === 'closed' && this.payload.pull_request.merged) {
-    merged = true 
-  } else {
-    merged = false
-  }
-
   toString() {
+    var merged
+
+    if (this.payload.action === 'closed' && this.payload.pull_request.merged) {
+      merged = true 
+    } else {
+      merged = false
+    }
+
     return {
       type: 'PullRequestEvent',
       merged: false
