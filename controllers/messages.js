@@ -64,11 +64,11 @@ module.exports = function(models, lib) {
     },
 
     github: function(req, res, next) {
-      console.log(req.body)
       var event = parseEvent(req.body)
 
       if (event) {
         console.log(event.toString())
+        console.log(req.body)
       }
 
       res.status(200).send({
