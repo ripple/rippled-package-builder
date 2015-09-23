@@ -7,9 +7,10 @@ class GithubEvent {
 class PushEvent extends GithubEvent {
 
   toString() {
+
     return {
       type: 'PushEvent',
-      rel: this.payload.rel
+      rel: this.payload.rel,
     }
   }
 }
@@ -24,10 +25,18 @@ class ReleaseEvent extends GithubEvent {
 }
 
 class PullRequestEvent extends GithubEvent {
+  var merged
+
+  if (this.payload.action === 'closed' && this.payload.pull_request.merged) {
+    merged = true 
+  } else {
+    merged = false
+  }
 
   toString() {
     return {
-      type: 'PullRequestEvent'
+      type: 'PullRequestEvent',
+      merged: false
     }
   }
 }
@@ -55,7 +64,7 @@ module.exports = function(models, lib) {
     },
 
     github: function(req, res, next) {
-
+      console.log(req.body)
       var event = parseEvent(req.body)
 
       if (event) {
