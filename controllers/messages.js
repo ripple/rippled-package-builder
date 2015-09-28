@@ -1,3 +1,5 @@
+var releases = require('../lib/releases')
+
 class GithubEvent {
   constructor(payload) {
     this.payload = payload
@@ -45,6 +47,7 @@ function parseEvent(payload) {
   if (payload.ref) {
     return new PushEvent(payload)
   } else if (payload.action == 'published' && payload.release) {
+    releases.emit('release', payload.release)
     return new ReleaseEvent(payload)
   } else if (payload.pull_request) {
     return new PullRequestEvent(payload)
@@ -64,12 +67,10 @@ module.exports = function(models, lib) {
     },
 
     github: function(req, res, next) {
-      console.log(req.body)
       var event = parseEvent(req.body)
 
       if (event) {
         console.log(event.toString())
-        console.log(req.body)
       }
 
       res.status(200).send({
