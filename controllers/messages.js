@@ -9,7 +9,7 @@ module.exports = function() {
 
       let payload = req.body
 
-      if (payload.rel === 'refs/heads/develop') {
+      if (payload.ref === 'refs/heads/develop') {
 
         Events.emit('push:develop', payload)
 
