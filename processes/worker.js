@@ -1,5 +1,5 @@
-var Releases = require('../lib/Releases')
-var DevelopBranch = require('../lib/DevelopBranch')
+var Releases = require('../lib/releases')
+var DevelopBranch = require('../lib/develop_branch')
 
 module.exports = function() {
 
