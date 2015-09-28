@@ -1,4 +1,4 @@
-require("babel/polyfill");
+//require("babel/polyfill");
 
 global['Bridges'] = {
   logger: require('winston')

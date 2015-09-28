@@ -69,16 +69,7 @@ function parseEvent(payload) {
 module.exports = function(models, lib) {
 
   return {
-    receive: function(req, res, next) {
-      console.log(req.body)
-
-      res.status(200).send({
-        success: true,
-        message: 'Welcome to Bridges'
-      })
-    },
-
-    github: function(req, res, next) {
+   github: function(req, res, next) {
       var event = parseEvent(req.body)
 
       if (event) {
