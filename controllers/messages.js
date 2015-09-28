@@ -1,5 +1,4 @@
-var Releases = require('../lib/releases')
-var DevelopBranch = require('../lib/develop_branch')
+import Events from '../lib/events'
 
 class GithubEvent {
   constructor(payload) {
@@ -8,8 +7,6 @@ class GithubEvent {
 }
 
 class MergedEvent extends GithubEvent {
-
-
 
 }
 
@@ -52,16 +49,17 @@ class PullRequestEvent extends GithubEvent {
 
 function parseEvent(payload) {
   if (payload.ref) {
+    Events.emit('push', payload)
     return new PushEvent(payload)
 
   } else if (payload.action == 'published' && payload.release) {
 
-    Releases.emit('release', payload.release)
+    Events.emit('release', payload.release)
     return new ReleaseEvent(payload)
 
   } else if (payload.pull_request) {
 
-    DevelopBranch.emit('merge', payload)
+    Events.emit('merge', payload)
     return new PullRequestEvent(payload)
   }
 }

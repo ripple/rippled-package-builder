@@ -1,16 +1,20 @@
-var Releases = require('../lib/releases')
-var DevelopBranch = require('../lib/develop_branch')
+var Events = require('../lib/events')
 
 module.exports = function() {
 
-  Releases.on('release', function(message) {
+  Events.on('release', function(message) {
 
     console.log('RELEASE!', message)
   })
 
-  DevelopBranch.on('merge', function(message) {
+  Events.on('merge', function(message) {
 
     console.log('MERGED TO DEVELOP!', message)
+  })
+
+  Events.on('push', function(message) {
+
+    console.log('PUSHED!', message)
   })
 }
 
