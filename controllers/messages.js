@@ -1,10 +1,12 @@
 import Events from '../lib/events'
 
-module.exports = function(models, lib) {
+module.exports = function() {
 
   return {
 
     github: function(req, res, next) {
+      console.log('req.body', payload)
+
       let payload = req.body
 
       if (payload.rel === 'refs/heads/develop') {
