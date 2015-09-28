@@ -5,7 +5,7 @@ module.exports = function() {
   return {
 
     github: function(req, res, next) {
-      console.log('req.body', payload)
+      console.log('req.body', req.body)
 
       let payload = req.body
 
