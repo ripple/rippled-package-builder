@@ -7,14 +7,9 @@ module.exports = function() {
     console.log('RELEASE!', message)
   })
 
-  Events.on('merge', function(message) {
+  Events.on('push:develop', function(message) {
 
-    console.log('MERGED TO DEVELOP!', message)
-  })
-
-  Events.on('push', function(message) {
-
-    console.log('PUSHED!', message)
+    console.log('PUSHED TO DEVELOP!', message)
   })
 }
 
