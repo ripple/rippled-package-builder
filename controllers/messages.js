@@ -1,9 +1,15 @@
-var releases = require('../lib/releases')
+var Releases = require('../lib/Releases')
 
 class GithubEvent {
   constructor(payload) {
     this.payload = payload
   }
+}
+
+class MergedEvent extends GithubEvent {
+
+
+
 }
 
 class PushEvent extends GithubEvent {
@@ -46,10 +52,15 @@ class PullRequestEvent extends GithubEvent {
 function parseEvent(payload) {
   if (payload.ref) {
     return new PushEvent(payload)
+
   } else if (payload.action == 'published' && payload.release) {
-    releases.emit('release', payload.release)
+
+    Releases.emit('release', payload.release)
     return new ReleaseEvent(payload)
+
   } else if (payload.pull_request) {
+
+    DevelopBranch.emit('merge', payload)
     return new PullRequestEvent(payload)
   }
 }
