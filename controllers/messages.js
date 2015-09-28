@@ -44,7 +44,7 @@ class PullRequestEvent extends GithubEvent {
 function parseEvent(payload) {
   if (payload.ref) {
     return new PushEvent(payload)
-  } else if (payload.action == 'released' && payload.release) {
+  } else if (payload.action == 'published' && payload.release) {
     return new ReleaseEvent(payload)
   } else if (payload.pull_request) {
     return new PullRequestEvent(payload)
