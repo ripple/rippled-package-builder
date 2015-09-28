@@ -1,4 +1,5 @@
 var Releases = require('../lib/Releases')
+var DevelopBranch = require('../lib/DevelopBranch')
 
 class GithubEvent {
   constructor(payload) {
