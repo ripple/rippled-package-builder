@@ -17,7 +17,9 @@ module.exports = function() {
         Events.emit('release', payload)
       }
 
-      res.status(200)
+      res.status(200).json({
+        success: true	
+      })
     }
   }
 }

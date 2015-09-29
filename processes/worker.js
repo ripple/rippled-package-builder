@@ -1,20 +1,6 @@
-var Events = require('../lib/events')
-var exec   = require('child_process').exec
-
-var INVALID_COMMAND = 'sudo docker run invalid-image'
-var COMMAND = 'sudo docker run -v $PWD:/opt/rippled-rpm/out -e "RIPPLED_BRANCH=release" rpm-builder'
-
-function Docker() {
-  return new Promise(function(resolve, reject) {
-    exec(INVALID_COMMAND, function (error, stdout, stderr) {
-        if (error) {
-          reject(error)
-        } else {
-          resolve(stdout)
-        }
-    })
-  })
-}
+import Events from '../lib/events'
+import Docker from '../lib/docker'
+import S3 from '../lib/s3'
 
 module.exports = function() {
 
@@ -24,13 +10,22 @@ module.exports = function() {
 
   Events.on('push:develop', function(message) {
 
-    console.log('PUSHED TO DEVELOP!', message)
+    Docker().then(function(rpmFiles) {
+      console.log('BUILD COMPLETE!')
 
-    Docker().then(function(result) {
-      console.log('Executed Docker', result)
+      Events.emit('rpm:built', rpmFiles)
     })
     .catch(function(error) {
       console.error('Error Executing Docker', error)
     })
+  })
+
+  Events.on('rpm:built', function(rpmFiles) {
+    console.log('RPM built', rpmFiles)
+    /*
+      S3.upload(rpmFiles).then(function(resource) {
+        console.log('Upload to S3 complete')
+      })
+    */
   })
 }
