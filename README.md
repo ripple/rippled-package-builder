@@ -14,7 +14,7 @@ The application relies on the rpm-builder images to exist, which must be
 built first using the following command:
 
 ```
-docker build -t rpm-builder rpm-builder/
+npm run rpm-builder:setup
 ```
 
 ## Configuration
@@ -22,6 +22,9 @@ docker build -t rpm-builder rpm-builder/
 All configuration is performed via environment variables:
 
 - GITHUB_WEBHOOK_SECRET
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
+- S3_BUCKET
 
 ## Usage
 
@@ -30,6 +33,6 @@ will launch a docker container that builds an RPM with the
 given release. The following command is executed:
 
 ```
-docker run -v $PWD:/opt/rippled-rpm/out -e "RIPPLED_BRANCH=release" rpm-builder
+sudo docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e "RIPPLED_BRANCH=release" -e S3_BUCKET=rpm-builder-test -v $PWD:/opt/rippled-rpm/out -it rippled-rpm-builder
 ```
 
