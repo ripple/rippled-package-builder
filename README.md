@@ -10,6 +10,12 @@ and runs the Rippled packaging processes to output RPM builds.
 
 ## Setup
 
+Install the node.js module dependencies:
+
+```
+npm install
+```
+
 The application relies on the rpm-builder images to exist, which must be
 built first using the following command:
 
