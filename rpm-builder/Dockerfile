@@ -13,4 +13,8 @@ RUN rpm -Uvh http://mirrors.ripple.com/ripple-repo-el7.rpm && \
     ln -s /opt/ripple/boost/lib/* /lib64/ && \
     ldconfig
 
+RUN yum -y install epel-release
+RUN yum -y install python-pip
+RUN pip install awscli
+
 CMD ./build_rpm.sh rippled.spec
