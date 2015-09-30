@@ -4,51 +4,36 @@ Name:           rippled
 Version:        0.29.1
 # Release should include either the build or hotfix number (ex: hf1%{?dist} or b2%{?dist})
 # If there is no b# or hf#, then use 1%{?dist}
-Release:        b14%{?dist}
-Summary:        Ripple peer-to-peer network daemon
+Release:        rc1%{?dist}
+Summary:        rippled daemon
 
-Group:          Applications/Internet
-License:        ISC
-URL:            https://github.com/ripple/rippled
-
-# curl -L -o SOURCES/rippled-release.zip https://github.com/ripple/rippled/archive/${RIPPLED_BRANCH}.zip
+License:        MIT
+URL:            http://ripple.com/
 Source0:        rippled-%{rippled_branch}.zip
-BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+Patch0:         build-against-ripple-libs.patch
 
-BuildRequires:  gcc-c++ scons openssl-devel protobuf-devel
-Requires:       protobuf openssl
-
+BuildRequires:  scons ripple-boost-devel protobuf-devel ripple-openssl-devel
+Requires:       ripple-openssl-libs
 
 %description
-Rippled is the server component of the Ripple network.
-
+rippled
 
 %prep
 %setup -n rippled-%{rippled_branch}
-
+%patch0 -p 1
 
 %build
-scons -j `grep -c processor /proc/cpuinfo`
-
+export PKG_CONFIG_PATH=/opt/ripple/openssl/lib/pkgconfig
+OPENSSL_ROOT=/opt/ripple/openssl BOOST_ROOT=/opt/ripple/boost/ scons %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/%{name}
-cp LICENSE %{buildroot}/usr/share/%{name}/
-mkdir -p %{buildroot}/usr/bin
-cp build/rippled %{buildroot}/usr/bin/rippled
-mkdir -p %{buildroot}/etc/%{name}
-cp doc/rippled-example.cfg %{buildroot}/etc/%{name}/rippled.cfg
-mkdir -p %{buildroot}/var/lib/%{name}/db
-mkdir -p %{buildroot}/var/log/%{name}
-
-
-%clean
-rm -rf %{buildroot}
-
+rm -rf $RPM_BUILD_ROOT
+install -D doc/rippled-example.cfg ${RPM_BUILD_ROOT}/etc/rippled/rippled.cfg
+install -D build/gcc.release/rippled ${RPM_BUILD_ROOT}/%{_bindir}/rippled
 
 %files
-%defattr(-,root,root,-)
-/usr/bin/rippled
-/usr/share/rippled/LICENSE
-%config(noreplace) /etc/rippled/rippled.cfg
+%doc README.md LICENSE
+%{_bindir}/rippled
+%{_sysconfdir}/rippled/
+
+%changelog
