@@ -1,0 +1,11 @@
+[Unit]
+Description=Ripple Daemon
+
+[Service]
+Type=simple
+ExecStart=/opt/ripple/bin/rippled --conf /opt/ripple/etc/rippled.cfg
+ExecStop=/opt/ripple/bin/rippled --conf /opt/ripple/etc/rippled.cfg stop
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
