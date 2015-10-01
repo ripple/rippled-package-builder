@@ -1,15 +1,18 @@
 import Events from '../lib/events'
-import {BuildRPM} from '../lib/docker'
+import {RPMFromCommit, RPMFromTag} from '../lib/docker'
 
 module.exports = function() {
 
   Events.on('release', function(message) {
-    console.log('RELEASE!', message)
+    const releaseTag = message.release.tag_name
+
+    RPMFromTag(releaseTag)
   })
 
   Events.on('push:develop', function(message) {
-    let commitHash = message.after
+    const commitHash = message.after
 
-    BuildRPM(commitHash)
+    RPMFromCommit(commitHash)
   })
 }
+
