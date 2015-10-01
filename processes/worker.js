@@ -8,6 +8,8 @@ module.exports = function() {
   })
 
   Events.on('push:develop', function(message) {
-    BuildRPM()
+    let commitHash = message.after
+
+    BuildRPM(commitHash)
   })
 }
