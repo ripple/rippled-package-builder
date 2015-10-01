@@ -1,17 +1,15 @@
-%define rippled_branch %(echo $RIPPLED_BRANCH)
+%define rippled_version %(echo $RIPPLED_VERSION)
+%define rippled_release %(echo $RIPPLED_RELEASE)
 %define         debug_package %{nil}
 %define _prefix /opt/ripple
 Name:           rippled
-# Version must be limited to MAJOR.MINOR.PATCH
-Version:        0.29.1
-# Release should include either the build or hotfix number (ex: hf1%{?dist} or b2%{?dist})
-# If there is no b# or hf#, then use 1%{?dist}
-Release:        rc1%{?dist}
+Version:        %{rippled_version}
+Release:        %{rippled_release}%{?dist}
 Summary:        rippled daemon
 
 License:        MIT
 URL:            http://ripple.com/
-Source0:        rippled-%{rippled_branch}.zip
+Source0:        rippled.tar.gz
 Source1:        rippled.service
 Source2:        50-rippled.preset
 Patch0:         build-against-ripple-libs.patch
@@ -23,7 +21,7 @@ Requires:       ripple-openssl-libs
 rippled
 
 %prep
-%setup -n rippled-%{rippled_branch}
+%setup -n rippled
 %patch0 -p 1
 
 %build
