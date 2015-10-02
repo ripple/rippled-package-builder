@@ -3,9 +3,5 @@
   hosts: staging
   remote_user: ubuntu
   sudo: yes
-  vars:
-    s3_bucket: rpm-builder-oregon
-    s3_key: 404.html
   roles:
     - deploy
-
