@@ -1,5 +1,5 @@
 import Events from '../lib/events'
-import {RPMFromCommit, RPMFromTag} from '../lib/docker'
+import {RPMFromCommit, RPMFromTag, DeployRPMToStaging} from '../lib/docker'
 
 module.exports = function() {
 
@@ -13,6 +13,11 @@ module.exports = function() {
     const commitHash = message.after
 
     RPMFromCommit(commitHash)
+  })
+
+  Events.on('s3:rpm:uploaded', function(message) {
+
+    DeployRPMToStaging(message.bucket, message.key)
   })
 }
 
