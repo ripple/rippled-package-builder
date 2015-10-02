@@ -1,0 +1,4 @@
+---
+- name: Echo the server version
+  shell: echo /etc/issue
+
