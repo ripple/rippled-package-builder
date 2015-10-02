@@ -3,6 +3,9 @@
   hosts: staging
   remote_user: ubuntu
   sudo: yes
+  vars:
+    s3_bucket: lookup('env', 'S3_BUCKET')
+    s3_key: lookup('env', 'S3_KEY')
   roles:
     - deploy
 

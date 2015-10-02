@@ -1,4 +1,16 @@
 ---
-- name: Echo the server version
-  shell: echo /etc/issue
+- name: Download pip
+  shell: curl -O https://bootstrap.pypa.io/get-pip.py
+
+- name: Install pip
+  shell: sudo python get-pip.py
+
+- name: Install AWS CLI
+  pip: name=awscli
+
+- name: Copy from S3
+  shell: aws s3 cp s3://{{s3_bucket}}/{{s3_key}} /var/packages/rpm/el7/unstable/
+
+- name: Re-index RPM repository
+  shell: createrepo /var/packages/rpm/el7/unstable/x86_64
 
