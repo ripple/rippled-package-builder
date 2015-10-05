@@ -12,9 +12,13 @@ module.exports = function() {
 
         Events.emit('push:develop', payload)
 
-      } else if (payload.action == 'published' && payload.release) {
+      } else if (payload.ref === 'refs/heads/release') {
 
-        Events.emit('release', payload)
+        Events.emit('push:release', payload)
+
+      } else if (payload.ref === 'refs/heads/master') {
+
+        Events.emit('push:master', payload)
       }
 
       res.status(200).json({

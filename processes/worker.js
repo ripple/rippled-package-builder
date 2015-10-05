@@ -3,16 +3,19 @@ import {RPMFromCommit, RPMFromTag, DeployRPMToStaging} from '../lib/docker'
 
 module.exports = function() {
 
-  Events.on('release', function(message) {
-    const releaseTag = message.release.tag_name
-
-    RPMFromTag(releaseTag)
-  })
-
   Events.on('push:develop', function(message) {
+    // trigger build for "nightly" yum repostory
     const commitHash = message.after
 
     RPMFromCommit(commitHash)
+  })
+
+  Events.on('push:release', function(message) {
+    // trigger build for "unstable" yum repostory
+  })
+
+  Events.on('push:master', function(message) {
+    // trigger build for "stable" yum repostory
   })
 
   Events.on('s3:rpm:uploaded', function(message) {
