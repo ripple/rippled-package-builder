@@ -34,6 +34,12 @@ All configuration is performed via environment variables:
 
 ## Usage
 
+Start the node.js build bot application, which will spawn subsequent containers to run build jobs:
+
+```
+docker run -it -v /var/run/docker.sock:/docker.sock -p 5000:5000 -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY rippled-build-bot
+```
+
 Upon receipt of a release message from github the software
 will launch a docker container that builds an RPM with the
 given release. The following command is executed:
