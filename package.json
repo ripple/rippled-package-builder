@@ -5,7 +5,6 @@
   "scripts": {
     "test": "mocha --compilers js:babel/register test/**/*.js",
     "start": "babel-node config/bridges.js",
-    "prestart": "npm run rpm-builder:setup",
     "rpm-builder:setup": "sudo docker build -t rippled-rpm-builder rpm-builder/"
   },
   "author": "",
