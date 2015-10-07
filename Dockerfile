@@ -1,6 +1,6 @@
-FROM node:4.1.0-onbuild
+FROM centos:latest
 
-RUN echo "deb http://http.debian.net/debian jessie-backports main contrib non-free" >> /etc/apt/sources.list
-RUN apt-get -y update
-RUN apt-get -y install docker.io
+RUN yum -y update
+RUN curl -sSL https://get.docker.com/ | sh
 
+CMD ["docker", "run", "hello-world"]
