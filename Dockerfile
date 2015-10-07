@@ -1,7 +1,6 @@
 FROM node:4.1.0-onbuild
 
-USER root
-
-RUN apt-get update --fix-missing
-RUN curl -sSL https://get.docker.com/ | sh
+RUN echo "deb http://http.debian.net/debian jessie-backports main contrib non-free" >> /etc/apt/sources.list
+RUN apt-get -y update
+RUN apt-get -y install docker.io
 
