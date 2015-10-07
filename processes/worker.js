@@ -7,7 +7,11 @@ module.exports = function() {
     // trigger build for "nightly" yum repostory
     const commitHash = message.after
 
-    RPMFromCommit(commitHash)
+    if (commitHash) {
+      RPMFromCommit(commitHash)
+    } else {
+      console.error('no commit hash')
+    }
   })
 
   Events.on('push:release', function(message) {
