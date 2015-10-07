@@ -1,0 +1,4 @@
+---
+- name: print os version
+  shell: cat /etc/issue
+
