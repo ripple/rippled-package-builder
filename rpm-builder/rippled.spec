@@ -1,10 +1,10 @@
-%define rippled_version %(echo $RIPPLED_VERSION)
-%define rippled_release %(echo $RIPPLED_RELEASE)
+%define rippled_version %(echo $VERSION)
 %define         debug_package %{nil}
 %define _prefix /opt/ripple
 Name:           rippled
+# Dashes in Version extensions must be converted to underscores
 Version:        %{rippled_version}
-Release:        %{rippled_release}%{?dist}
+Release:        1%{?dist}
 Summary:        rippled daemon
 
 License:        MIT
