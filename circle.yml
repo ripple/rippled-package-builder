@@ -11,6 +11,7 @@ dependencies:
 deployment:
   staging:
     branch: staging
+    commands:
       - ./push-to-docker.sh staging
       - chmod a-rwx,u+r ansible/skynet-keys/*
       - cd ansible && ansible-playbook -i hosts -l staging bot.yml
