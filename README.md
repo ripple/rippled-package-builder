@@ -32,6 +32,14 @@ All configuration is performed via environment variables:
 - AWS_SECRET_ACCESS_KEY
 - S3_BUCKET
 
+## Deployment
+
+The following environment variables must be set to deploy from Circle CI
+
+- DOCKER_EMAIL
+- DOCKER_USERNAME
+- DOCKER_PASSWORD
+
 ## Usage
 
 Start the node.js build bot application, which will spawn subsequent containers to run build jobs:
