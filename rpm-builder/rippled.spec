@@ -12,7 +12,6 @@ URL:            http://ripple.com/
 Source0:        rippled.tar.gz
 Source1:        rippled.service
 Source2:        50-rippled.preset
-Patch0:         build-against-ripple-libs.patch
 
 BuildRequires:  scons ripple-boost-devel protobuf-devel ripple-openssl-devel
 Requires:       ripple-openssl-libs
@@ -22,11 +21,9 @@ rippled
 
 %prep
 %setup -n rippled
-%patch0 -p 1
 
 %build
-export PKG_CONFIG_PATH=%{_prefix}/openssl/lib/pkgconfig
-OPENSSL_ROOT=%{_prefix}/openssl BOOST_ROOT=%{_prefix}/boost/ scons %{?_smp_mflags}
+scons %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT

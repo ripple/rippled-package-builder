@@ -10,6 +10,10 @@ RUN echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
 
 RUN ln -s /opt/ripple/boost/include/boost /usr/include/boost
 RUN ln -s /opt/ripple/boost/lib/* /lib64/
+RUN ln -s -f /opt/ripple/openssl/include/openssl/* /usr/include/openssl/
+RUN ln -s -f /opt/ripple/openssl/lib/*.so* /lib64/
+RUN ln -s -f /opt/ripple/openssl/lib/openssl /lib64/openssl
+RUN ln -s -f 1/opt/ripple/openssl/lib/pkgconfig/* /lib64/pkgconfig/
 RUN ldconfig
 
 COPY private.key ./
@@ -24,7 +28,6 @@ RUN echo "%_gpg_path /root/.gnupg" >> ~/.rpmmacros
 COPY run_script.sh ./
 COPY build_rpm.sh ./
 COPY rippled.spec ./
-COPY build-against-ripple-libs.patch /root/rpmbuild/SOURCES/
 COPY rippled.service /root/rpmbuild/SOURCES/
 COPY 50-rippled.preset /root/rpmbuild/SOURCES/
 
