@@ -2,3 +2,15 @@
 - name: print os version
   shell: cat /etc/issue
 
+- name: update yum
+  shell: sudo yum update
+
+- name: install docker
+  shell: curl -sSL https://get.docker.com/ | sh
+
+- name: start docker service
+  service: name=docker state=started
+
+- name: run hello-world container
+  shell: sudo docker run hello-world
+

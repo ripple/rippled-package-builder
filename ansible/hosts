@@ -1,5 +1,5 @@
 [staging]
-api-staging.validators.ripple.com
+54.254.226.175
 
 [staging:vars]
 ansible_ssh_private_key_file=skynet-keys/ap-southeast-1.pem
