@@ -11,6 +11,6 @@
 - name: start docker service
   service: name=docker state=started
 
-- name: run hello-world container
-  shell: sudo docker run hello-world
+- name: run rippled-build-bot container
+  shell: sudo docker run stevenzeiler/rippled-build-bot
 
