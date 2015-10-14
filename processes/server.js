@@ -3,11 +3,14 @@ var BridgesExpress = require('bridges-express')
 var port           = process.env.PORT || 5000
 var app            = require('../lib/app')
 
-module.exports = function() {
+module.exports = function(models) {
 
   var server = new BridgesExpress({
     app: app,
-    directory: path.join(__dirname, '..')
+    directory: path.join(__dirname, '..'),
+    controllers: {
+      inject: [models]
+    }
   })
 
   server.listen(port, function() {

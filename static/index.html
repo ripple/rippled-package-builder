@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <link rel='stylesheet' href='/css/style.css'></link>
+  </head>
+
+  <body>
+    <h1><img class='img-logo' src='Logo_Final.png'/></h1>
+
+    <div id='content'></div>
+  </body>
+
+  <script src='http://code.jquery.com/jquery-1.11.3.min.js'></script>
+  <script src='/js/underscore-min.js'></script>
+  <script src='/js/main.js'></script>
+
+  <script type='text/template' id='rpm_file_item_template'>
+    <li><a target='_blank' href='https://s3-ap-southeast-1.amazonaws.com/rpm-builder-test/<%= fileName %>'><%= fileName %></a></li>
+  </script>
+
+  <script type='text/template' id='loading-rpm-files-template'>
+    <img src='/img/logo.png' class='spinning-logo'/>
+  </script>
+
+  <script type='text/template' id='rpm-file-list'>
+    <h3>Rippled RPM Builds</h3>
+  </script>
+</html>
