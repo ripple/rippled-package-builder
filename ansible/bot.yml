@@ -1,0 +1,7 @@
+---
+- name: Provision application container host
+  hosts: staging 
+  sudo: true
+  user: ec2-user
+  roles:
+    - bot

@@ -30,7 +30,18 @@ All configuration is performed via environment variables:
 - GITHUB_WEBHOOK_SECRET
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY
+- GPG_PASSPHRASE
 - S3_BUCKET
+
+`GPG_PASSPHRASE` should correspond to a gpg key named **Ripple Release Engineering**, which is used to sign built packages.
+
+## Deployment
+
+The following environment variables must be set to deploy from Circle CI
+
+- DOCKER_EMAIL
+- DOCKER_USERNAME
+- DOCKER_PASSWORD
 
 ## Usage
 
