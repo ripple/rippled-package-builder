@@ -48,7 +48,7 @@ The following environment variables must be set to deploy from Circle CI
 Start the node.js build bot application, which will spawn subsequent containers to run build jobs:
 
 ```
-docker run -it -v /var/run/docker.sock:/var/run/docker.sock -p 5000:5000 -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY rippled-build-bot
+docker run -d --restart=always -v /var/run/docker.sock:/var/run/docker.sock -p 5000:5000 -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY rippled-build-bot
 ```
 
 Upon receipt of a release message from github the software
