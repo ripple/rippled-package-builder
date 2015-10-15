@@ -24,7 +24,7 @@ module.exports = function() {
 
   Events.on('s3:rpm:uploaded', function(message) {
 
-    DeployRPMToStaging(message.bucket, message.key)
+    DeployRPMToStaging(message.bucket, message.key, message.aws_region)
   })
 }
 

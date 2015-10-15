@@ -1,16 +1,10 @@
-FROM ubuntu:latest
-
-RUN sudo apt-get -qq install software-properties-common
-RUN sudo add-apt-repository -y ppa:ansible/ansible
-RUN sudo apt-get -qq update
-RUN sudo apt-get -qq install ansible
+FROM williamyeh/ansible:ubuntu14.04
 
 COPY ./ /home/docker/rpm-deployer
 
-ENV AWS_ACCESS_KEY_ID $AWS_ACCESS_KEY_ID
-ENV AWS_SECRET_ACCESS_KEY $AWS_SECRET_ACCESS_KEY
-ENV S3_BUCKET $S3_BUCKET
-ENV S3_KEY $S3_KEY
+# This is a workaround for 'Host key verification failed' error from ansible-playbook
+RUN mkdir /root/.ssh
+COPY ssh-config /root/.ssh/config
+RUN chmod 600 /root/.ssh/config
 
-CMD cd /home/docker/rpm-deployer && ansible-playbook -vvv -i ansible/hosts ansible/staging.yml
-
+CMD cd /home/docker/rpm-deployer/ansible && ansible-playbook -vvv -i hosts staging.yml

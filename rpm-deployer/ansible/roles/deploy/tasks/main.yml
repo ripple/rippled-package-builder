@@ -9,8 +9,10 @@
   pip: name=awscli
 
 - name: Copy from S3
-  shell: AWS_ACCESS_KEY_ID={{lookup('env','AWS_ACCESS_KEY_ID')}} AWS_SECRET_ACCESS_KEY={{lookup('env', 'AWS_SECRET_ACCESS_KEY')}} aws s3 cp s3://{{lookup('env', 'S3_BUCKET')}}/{{lookup('env', 'S3_KEY')}} /var/packages/rpm/el7/unstable/
+  shell: AWS_ACCESS_KEY_ID={{lookup('env','AWS_ACCESS_KEY_ID')}} AWS_SECRET_ACCESS_KEY={{lookup('env', 'AWS_SECRET_ACCESS_KEY')}} aws s3 cp s3://{{lookup('env', 'S3_BUCKET')}}/{{lookup('env', 'S3_KEY')}} /var/packages/rpm/el7/stable/x86_64
 
 - name: Re-index RPM repository
-  shell: createrepo /var/packages/rpm/el7/unstable/x86_64
+  shell: createrepo /var/packages/rpm/el7/stable/x86_64
 
+- name: Add message to rippled-rpm-deployed-staging SQS queue
+  shell: AWS_ACCESS_KEY_ID={{lookup('env','AWS_ACCESS_KEY_ID')}} AWS_SECRET_ACCESS_KEY={{lookup('env', 'AWS_SECRET_ACCESS_KEY')}} aws sqs send-message --queue-url https://sqs.us-west-2.amazonaws.com/356003847803/rippled-rpm-deployed-staging --message-body '{"repo":"stable"}' --region {{lookup('env','AWS_REGION')}}

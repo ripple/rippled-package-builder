@@ -14,6 +14,6 @@
 - name: pull latest rippled-build-bot container
   shell: sudo docker pull stevenzeiler/rippled-build-bot
 
-- name: runrippled-build-bot container
+- name: run rippled-build-bot container
   shell: sudo docker run -d stevenzeiler/rippled-build-bot
 
