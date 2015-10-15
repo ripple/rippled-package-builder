@@ -5,13 +5,6 @@ module.exports = function() {
 
   Events.on('push:develop', function(message) {
     // trigger build for "nightly" yum repostory
-    const commitHash = message.after
-
-    if (commitHash) {
-      RPMFromCommit(commitHash)
-    } else {
-      console.error('no commit hash')
-    }
   })
 
   Events.on('push:release', function(message) {
@@ -20,6 +13,13 @@ module.exports = function() {
 
   Events.on('push:master', function(message) {
     // trigger build for "stable" yum repostory
+    const commitHash = message.after
+
+    if (commitHash) {
+      RPMFromCommit(commitHash)
+    } else {
+      console.error('no commit hash')
+    }
   })
 
   Events.on('s3:rpm:uploaded', function(message) {
