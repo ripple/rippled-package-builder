@@ -4,8 +4,10 @@
   "description": "Auto-generated Bridges Node.js application",
   "scripts": {
     "test": "mocha --compilers=js:babel/register test/**/*.js",
+    "prestart": "docker build -t rippled-rpm-builder rpm-builder/ && docker build -t rippled-rpm-deployer rpm-deployer/",
     "start": "babel-node config/bridges.js",
-    "rpm-builder:setup": "sudo docker build -t rippled-rpm-builder rpm-builder/"
+    "rpm-builder:setup": "docker build -t rippled-rpm-builder rpm-builder/",
+    "rpm-deployer:setup": "docker build -t rippled-rpm-deployer rpm-deployer/"
   },
   "author": "",
   "license": "ISC",
