@@ -1,4 +1,4 @@
-# Bridges Application
+# Rippled Package Builder
 
 Responds to events from the rippled repository on Github,
 and runs the Rippled packaging processes to output RPM builds.
