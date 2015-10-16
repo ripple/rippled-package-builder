@@ -1,4 +1,4 @@
-%define rippled_version %(echo $VERSION)
+%define rippled_version %(echo $RIPPLED_RPM_VERSION)
 %define         debug_package %{nil}
 %define _prefix /opt/ripple
 Name:           rippled

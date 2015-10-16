@@ -1,4 +1,17 @@
-FROM williamyeh/ansible:ubuntu14.04
+FROM ubuntu:latest
+WORKDIR /home/docker/rpm-deployer
+
+RUN apt-get -qq install python2.7
+RUN apt-get -qq install curl
+RUN curl -O https://bootstrap.pypa.io/get-pip.py
+RUN python2.7 get-pip.py
+RUN pip install awscli
+
+
+RUN sudo apt-get -qq install software-properties-common
+RUN sudo add-apt-repository -y ppa:ansible/ansible
+RUN sudo apt-get -qq update
+RUN sudo apt-get -qq install ansible
 
 COPY ./ /home/docker/rpm-deployer
 
@@ -7,4 +20,4 @@ RUN mkdir /root/.ssh
 COPY ssh-config /root/.ssh/config
 RUN chmod 600 /root/.ssh/config
 
-CMD cd /home/docker/rpm-deployer/ansible && ansible-playbook -vvv -i hosts staging.yml
+CMD ./deploy_rpm.sh
