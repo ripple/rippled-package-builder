@@ -12,10 +12,10 @@ else
   exit 1
 fi
 
-VERSION=$(egrep -i -o "\b(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9a-z\-]+(\.[0-9a-z\-]+)*)?(\+[0-9a-z\-]+(\.[0-9a-z\-]+)*)?\b" src/ripple/protocol/impl/BuildInfo.cpp)
+RIPPLED_VERSION=$(egrep -i -o "\b(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9a-z\-]+(\.[0-9a-z\-]+)*)?(\+[0-9a-z\-]+(\.[0-9a-z\-]+)*)?\b" src/ripple/protocol/impl/BuildInfo.cpp)
 
-VERSION=`echo "$VERSION" | tr - _`
-export VERSION
+RIPPLED_RPM_VERSION=`echo "$RIPPLED_VERSION" | tr - _`
+export RIPPLED_RPM_VERSION
 
 cd ..
 
@@ -24,5 +24,7 @@ tar -zcf ~/rpmbuild/SOURCES/rippled.tar.gz rippled/
 rpmbuild -ba $1
 rpmsign --key-id="Ripple Release Engineering" --addsign ~/rpmbuild/RPMS/x86_64/*.rpm ~/rpmbuild/SRPMS/*.rpm
 
-aws s3 cp --recursive ~/rpmbuild/RPMS/x86_64/ s3://rpm-builder-test
-aws s3 cp --recursive ~/rpmbuild/SRPMS/ s3://rpm-builder-test
+# Upload a tar of the rpm and source rpm to s3
+tar -zvcf $RIPPLED_VERSION.tar.gz -C rpm . -C ../src .
+
+aws s3 cp $RIPPLED_VERSION.tar.gz s3://rpm-builder-test
