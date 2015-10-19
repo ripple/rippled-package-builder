@@ -25,6 +25,6 @@ rpmbuild -ba $1
 rpmsign --key-id="Ripple Release Engineering" --addsign ~/rpmbuild/RPMS/x86_64/*.rpm ~/rpmbuild/SRPMS/*.rpm
 
 # Upload a tar of the rpm and source rpm to s3
-tar -zvcf $RIPPLED_VERSION.tar.gz -C rpm . -C ../src .
+tar -zvcf $RIPPLED_VERSION.tar.gz -C ~/rpmbuild/RPMS/x86_64/ . -C ~/rpmbuild/SRPMS/ .
 
 aws s3 cp $RIPPLED_VERSION.tar.gz s3://rpm-builder-test
