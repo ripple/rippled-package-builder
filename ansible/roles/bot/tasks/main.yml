@@ -18,5 +18,5 @@
   shell: sudo docker pull stevenzeiler/rippled-build-bot
 
 - name: run rippled-build-bot container
-  shell: sudo docker run -d stevenzeiler/rippled-build-bot
+  shell: sudo docker run -d -v /var/run/docker.sock:/var/run/docker.sock -e "AWS_ACCESS_KEY_ID={{aws_access_key_id}}" -e "AWS_SECRET_ACCESS_KEY={{aws_secret_access_key}}" -e "GPG_PASSPHRASE={{gpg_passphrase}}" stevenzeiler/rippled-build-bot
 
