@@ -14,6 +14,12 @@
 - name: start docker service
   service: name=docker state=started
 
+- name: create GPG key directory
+  file: path=/etc/gpg state=directory
+
+- name: install GPG private.key 
+  copy: content="{{private_key}}" dest=/etc/gpg/private.key
+
 - name: pull latest rippled-build-bot container
   shell: sudo docker pull stevenzeiler/rippled-build-bot
 
