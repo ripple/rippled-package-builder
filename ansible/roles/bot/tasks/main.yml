@@ -1,12 +1,15 @@
 ---
-- name: print os version
-  shell: cat /etc/issue
+- name: Check if docker is installed
+  command: which docker
+  register: docker_installed
 
 - name: update yum
   shell: sudo yum update
+  when: not docker_installed
 
 - name: install docker
   shell: curl -sSL https://get.docker.com/ | sh
+  when: not docker_installed
 
 - name: start docker service
   service: name=docker state=started
