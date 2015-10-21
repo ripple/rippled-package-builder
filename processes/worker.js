@@ -1,5 +1,5 @@
 import Events from '../lib/events'
-import {RPMFromCommit, RPMFromTag, DeployRPMToStaging, TestStagingRPM} from '../lib/docker'
+import {RPMFromCommit, DeployRPMToStaging, TestStagingRPM} from '../lib/docker'
 
 module.exports = function() {
 
@@ -22,14 +22,14 @@ module.exports = function() {
     }
   })
 
-  Events.on('s3:rpm:uploaded', function(message) {
+  Events.on('sqs:rpm:uploaded', function(message) {
 
-    DeployRPMToStaging(message.bucket, message.key, message.aws_region)
+    DeployRPMToStaging(message)
   })
 
-  Events.on('s3:rpm:deployed', function(yumRepo) {
+  Events.on('sqs:rpm:deployed', function(message) {
 
-    TestStagingRPM(yumRepo)
+    TestStagingRPM(message)
   })
 }
 

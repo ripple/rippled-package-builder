@@ -6,7 +6,7 @@ RUN apt-get -qq install curl
 RUN curl -O https://bootstrap.pypa.io/get-pip.py
 RUN python2.7 get-pip.py
 RUN pip install awscli
-
+RUN apt-get -qq install rpm
 
 RUN sudo apt-get -qq install software-properties-common
 RUN sudo add-apt-repository -y ppa:ansible/ansible

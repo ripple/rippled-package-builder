@@ -5,12 +5,16 @@ const QUEUE_URL = 'https://sqs.us-west-2.amazonaws.com/356003847803/rippled-rpm-
 
 class RPMFile {
   constructor(message) {
-    const s3_message = JSON.parse(JSON.parse(message.Body).Message).Records[0]
+    const rpm_message = JSON.parse(message.Body)
 
     return {
-      bucket: s3_message.s3.bucket.name,
-      key: s3_message.s3.object.key,
-      aws_region: s3_message.awsRegion
+      s3_bucket: rpm_message.s3_bucket,
+      s3_key: rpm_message.s3_key,
+      aws_region: rpm_message.aws_region,
+      commit_hash: rpm_message.commit_hash,
+      md5sum: rpm_message.md5sum,
+      rippled_version: rpm_message.rippled_version,
+      yum_repo: rpm_message.yum_repo
     }
   }
 }
@@ -28,7 +32,7 @@ class Worker extends SQSWorker {
       done()
     }
 
-    Events.emit('s3:rpm:uploaded', rpmFile)
+    Events.emit('sqs:rpm:uploaded', rpmFile)
 
     done()
   }
