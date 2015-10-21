@@ -31,6 +31,7 @@ All configuration is performed via environment variables:
 - AWS_SECRET_ACCESS_KEY
 - GPG_PASSPHRASE
 - S3_BUCKET
+- SLACK_TOKEN
 
 `GPG_PASSPHRASE` should correspond to a gpg key named **Ripple Release Engineering**, which is used to sign built packages.
 
