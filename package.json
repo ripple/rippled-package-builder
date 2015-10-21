@@ -4,8 +4,12 @@
   "description": "Auto-generated Bridges Node.js application",
   "scripts": {
     "test": "mocha --compilers=js:babel/register test/**/*.js",
+    "prestart": "docker build -t rippled-rpm-builder rpm-builder/ && docker build -t rippled-rpm-deployer rpm-deployer/ && docker build -t rippled-rpm-tester rpm-tester/",
     "start": "babel-node config/bridges.js",
-    "rpm-builder:setup": "sudo docker build -t rippled-rpm-builder rpm-builder/"
+    "rpm-builder:setup": "docker build -t rippled-rpm-builder rpm-builder/",
+    "rpm-deployer:setup": "docker build -t rippled-rpm-deployer rpm-deployer/",
+    "rpm-tester:setup": "docker build -t rippled-rpm-tester rpm-tester/",
+    "ansible:deploy:staging": "cd ansible && ansible-playbook -i hosts -l staging --extra-vars='@vault.yml' --ask-vault-pass bot.yml"
   },
   "author": "",
   "license": "ISC",

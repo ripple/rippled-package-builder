@@ -3,8 +3,8 @@ Description=Ripple Daemon
 
 [Service]
 Type=simple
-ExecStart=/opt/ripple/bin/rippled --conf /opt/ripple/etc/rippled.cfg
-ExecStop=/opt/ripple/bin/rippled --conf /opt/ripple/etc/rippled.cfg stop
+ExecStart=LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ripple/openssl/lib:/opt/ripple/boost/lib /opt/ripple/bin/rippled --conf /opt/ripple/etc/rippled.cfg
+ExecStop=LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ripple/openssl/lib:/opt/ripple/boost/lib /opt/ripple/bin/rippled --conf /opt/ripple/etc/rippled.cfg stop
 Restart=on-failure
 
 [Install]

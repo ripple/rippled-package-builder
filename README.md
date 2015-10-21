@@ -27,7 +27,6 @@ npm run rpm-builder:setup
 
 All configuration is performed via environment variables:
 
-- GITHUB_WEBHOOK_SECRET
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY
 - GPG_PASSPHRASE
@@ -56,6 +55,6 @@ will launch a docker container that builds an RPM with the
 given release. The following command is executed:
 
 ```
-sudo docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e "RIPPLED_BRANCH=release" -e S3_BUCKET=rpm-builder-test -v $PWD:/opt/rippled-rpm/out -it rippled-rpm-builder
+sudo docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e "RIPPLED_BRANCH=release" -e GPG_PASSPHRASE=<passphrase> -e S3_BUCKET=rpm-builder-test -v $PWD:/opt/rippled-rpm/out -it rippled-rpm-builder
 ```
 

@@ -1,4 +1,12 @@
 FROM ubuntu:latest
+WORKDIR /home/docker/rpm-deployer
+
+RUN apt-get -qq install python2.7
+RUN apt-get -qq install curl
+RUN curl -O https://bootstrap.pypa.io/get-pip.py
+RUN python2.7 get-pip.py
+RUN pip install awscli
+RUN apt-get -qq install rpm
 
 RUN sudo apt-get -qq install software-properties-common
 RUN sudo add-apt-repository -y ppa:ansible/ansible
@@ -7,10 +15,9 @@ RUN sudo apt-get -qq install ansible
 
 COPY ./ /home/docker/rpm-deployer
 
-ENV AWS_ACCESS_KEY_ID $AWS_ACCESS_KEY_ID
-ENV AWS_SECRET_ACCESS_KEY $AWS_SECRET_ACCESS_KEY
-ENV S3_BUCKET $S3_BUCKET
-ENV S3_KEY $S3_KEY
+# This is a workaround for 'Host key verification failed' error from ansible-playbook
+RUN mkdir /root/.ssh
+COPY ssh-config /root/.ssh/config
+RUN chmod 600 /root/.ssh/config
 
-CMD cd /home/docker/rpm-deployer && ansible-playbook -vvv -i ansible/hosts ansible/staging.yml
-
+CMD ./deploy_rpm.sh

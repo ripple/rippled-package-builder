@@ -1,10 +1,18 @@
 import Events from '../lib/events'
-import {RPMFromCommit, RPMFromTag, DeployRPMToStaging} from '../lib/docker'
+import {RPMFromCommit, DeployRPMToStaging, TestStagingRPM} from '../lib/docker'
 
 module.exports = function() {
 
   Events.on('push:develop', function(message) {
     // trigger build for "nightly" yum repostory
+  })
+
+  Events.on('push:release', function(message) {
+    // trigger build for "unstable" yum repostory
+  })
+
+  Events.on('push:master', function(message) {
+    // trigger build for "stable" yum repostory
     const commitHash = message.after
 
     if (commitHash) {
@@ -14,17 +22,14 @@ module.exports = function() {
     }
   })
 
-  Events.on('push:release', function(message) {
-    // trigger build for "unstable" yum repostory
+  Events.on('sqs:rpm:uploaded', function(message) {
+
+    DeployRPMToStaging(message)
   })
 
-  Events.on('push:master', function(message) {
-    // trigger build for "stable" yum repostory
-  })
+  Events.on('sqs:rpm:deployed', function(message) {
 
-  Events.on('s3:rpm:uploaded', function(message) {
-
-    DeployRPMToStaging(message.bucket, message.key)
+    TestStagingRPM(message)
   })
 }
 
