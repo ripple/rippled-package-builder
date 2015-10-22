@@ -40,7 +40,7 @@ All configuration is performed via environment variables:
 - SQS_QUEUE_FAILED
 - SLACK_TOKEN
 
-`GPG_PASSPHRASE` should correspond to a gpg key named **Ripple Release Engineering**, which is used to sign built packages.
+`GPG_PASSPHRASE` should correspond to a gpg private key named **Ripple Release Engineering**, which is used to sign built packages. Ansible deployment expects the gpg key to be found in /etc/gpg/private.key
 
 ## Deployment
 
