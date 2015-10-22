@@ -12,6 +12,7 @@ class RPMFile {
       s3_key: rpm_message.s3_key,
       aws_region: rpm_message.aws_region,
       commit_hash: rpm_message.commit_hash,
+      commit_signer: rpm_message.commit_signer,
       md5sum: rpm_message.md5sum,
       rippled_version: rpm_message.rippled_version,
       yum_repo: rpm_message.yum_repo
