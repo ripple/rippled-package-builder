@@ -30,7 +30,14 @@ All configuration is performed via environment variables:
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY
 - GPG_PASSPHRASE
-- S3_BUCKET
+- S3_BUCKET_STABLE
+- S3_BUCKET_UNSTABLE
+- S3_BUCKET_NIGHTLY
+- SQS_REGION
+- SQS_QUEUE_UPLOADED
+- SQS_QUEUE_DEPLOYED
+- SQS_QUEUE_TESTED
+- SQS_QUEUE_FAILED
 - SLACK_TOKEN
 
 `GPG_PASSPHRASE` should correspond to a gpg key named **Ripple Release Engineering**, which is used to sign built packages.
@@ -53,9 +60,8 @@ docker run -it -v /var/run/docker.sock:/var/run/docker.sock -p 5000:5000 -e AWS_
 
 Upon receipt of a release message from github the software
 will launch a docker container that builds an RPM with the
-given release. The following command is executed:
+given release.
 
-```
-sudo docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e "RIPPLED_BRANCH=release" -e GPG_PASSPHRASE=<passphrase> -e S3_BUCKET=rpm-builder-test -v $PWD:/opt/rippled-rpm/out -it rippled-rpm-builder
-```
+The built rpm and source rpm are uploaded to S3 and deployed to the staging yum repository.
 
+Finally, the rpm is installed from the staging yum repository and tested.
