@@ -17,7 +17,7 @@ module.exports = function() {
     const commitHash = message.after
 
     if (commitHash) {
-      RPMFromCommit(commitHash)
+      RPMFromCommit(commitHash, process.env.S3_BUCKET_STABLE, 'ripple-stable')
       postToSlack(`I am now building a rippled RPM from the master branch commit ${commitHash}`)
     } else {
       console.error('no commit hash')

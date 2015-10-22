@@ -1,8 +1,6 @@
 import SQSWorker from '../lib/SqsWorker'
 import Events from '../lib/events'
 
-const QUEUE_URL = 'https://sqs.us-west-2.amazonaws.com/356003847803/rippled-rpm-uploaded'
-
 class RPMFile {
   constructor(message) {
     const rpm_message = JSON.parse(message.Body)
@@ -10,7 +8,6 @@ class RPMFile {
     return {
       s3_bucket: rpm_message.s3_bucket,
       s3_key: rpm_message.s3_key,
-      aws_region: rpm_message.aws_region,
       commit_hash: rpm_message.commit_hash,
       commit_signer: rpm_message.commit_signer,
       md5sum: rpm_message.md5sum,
@@ -41,8 +38,8 @@ class Worker extends SQSWorker {
 
 module.exports = function() {
   new Worker({
-    QueueUrl: QUEUE_URL,
-    region: 'us-west-2'
+    QueueUrl: process.env.SQS_QUEUE_UPLOADED,
+    region: process.env.SQS_REGION
   }).start()
 }
 
