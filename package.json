@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Auto-generated Bridges Node.js application",
   "scripts": {
-    "test": "mocha --compilers=js:babel/register test/**/*.js",
+    "test": "echo 'more tests!'",
     "prestart": "docker build -t rippled-rpm-builder rpm-builder/ && docker build -t rippled-rpm-deployer rpm-deployer/ && docker build -t rippled-rpm-tester rpm-tester/",
     "start": "babel-node config/bridges.js",
     "rpm-builder:setup": "docker build -t rippled-rpm-builder rpm-builder/",
