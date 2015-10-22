@@ -1,5 +1,6 @@
 import Events from '../lib/events'
 import {RPMFromCommit, DeployRPMToStaging, TestStagingRPM} from '../lib/docker'
+import {postToSlack} from '../lib/slack'
 
 module.exports = function() {
 
@@ -17,6 +18,7 @@ module.exports = function() {
 
     if (commitHash) {
       RPMFromCommit(commitHash)
+      postToSlack(`I am now building a rippled RPM from the master branch commit ${commitHash}`)
     } else {
       console.error('no commit hash')
     }

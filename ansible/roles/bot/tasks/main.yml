@@ -20,9 +20,8 @@
 - name: install GPG private.key 
   copy: content="{{private_key}}" dest=/etc/gpg/private.key
 
-- name: pull latest rippled-build-bot container
-  shell: sudo docker pull stevenzeiler/rippled-build-bot
+- name: pull latest rippled-package-builder:latest container
+  shell: sudo docker pull stevenzeiler/rippled-package-builder:latest
 
-- name: run rippled-build-bot container
-  shell: sudo docker run -d -v /var/run/docker.sock:/var/run/docker.sock -v /etc/gpg/private.key:/usr/src/app/rpm-builder/private.key -e "AWS_ACCESS_KEY_ID={{aws_access_key_id}}" -e "AWS_SECRET_ACCESS_KEY={{aws_secret_access_key}}" -e "GPG_PASSPHRASE={{gpg_passphrase}}" stevenzeiler/rippled-build-bot
-
+- name: run rippled-package-builder:latest container
+  shell: sudo docker run -d -v /var/run/docker.sock:/var/run/docker.sock -v /etc/gpg/private.key:/usr/src/app/rpm-builder/private.key -e "AWS_ACCESS_KEY_ID={{aws_access_key_id}}" -e "AWS_SECRET_ACCESS_KEY={{aws_secret_access_key}}" -e "GPG_PASSPHRASE={{gpg_passphrase}}" -e "S3_BUCKET=rpm-builder-oregon" -e "SLACK_TOKEN={{slack_token}}" stevenzeiler/rippled-package-builder:latest

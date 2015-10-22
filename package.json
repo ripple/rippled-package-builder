@@ -9,7 +9,8 @@
     "rpm-builder:setup": "docker build -t rippled-rpm-builder rpm-builder/",
     "rpm-deployer:setup": "docker build -t rippled-rpm-deployer rpm-deployer/",
     "rpm-tester:setup": "docker build -t rippled-rpm-tester rpm-tester/",
-    "ansible:deploy:staging": "cd ansible && ansible-playbook -i hosts -l staging --extra-vars='@vault.yml' --ask-vault-pass bot.yml"
+    "ansible:deploy:staging": "cd ansible && ansible-playbook -i hosts -l staging --extra-vars='@vault.yml' --ask-vault-pass bot.yml",
+    "ansible:deploy:production": "cd ansible && ansible-playbook -i hosts -l production --extra-vars='@vault.yml' --ask-vault-pass bot.yml"
   },
   "author": "",
   "license": "ISC",
@@ -30,6 +31,7 @@
     "passport": "^0.2.1",
     "pg": "^4.1.0",
     "require-all-to-camel": "^1.0.0",
+    "slackbots": "^0.4.0",
     "sqlite3": "^3.0.4",
     "supertest": "^1.1.0",
     "winston": "^0.8.3"
