@@ -1,7 +1,7 @@
 #!/bin/bash
-git clone https://github.com/ripple/rippled.git
 
 cd rippled
+git fetch origin
 
 if [ -n "$COMMIT_HASH" ]; then
   git checkout $COMMIT_HASH
@@ -10,26 +10,36 @@ else
   exit 1
 fi
 
-# TODO Verify git commit signature
+# Verify git commit signature
+COMMIT_SIGNER=`git verify-commit HEAD 2>&1 >/dev/null | grep 'Good signature from' | grep -oP '\"\K[^"]+'`
+if [ -z "$COMMIT_SIGNER" ]; then
+  ERROR="git commit signature verification failed"
+else
+  RIPPLED_VERSION=$(egrep -i -o "\b(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9a-z\-]+(\.[0-9a-z\-]+)*)?(\+[0-9a-z\-]+(\.[0-9a-z\-]+)*)?\b" src/ripple/protocol/impl/BuildInfo.cpp)
 
+  # Convert dashes to underscores in rippled version for rpm compatibility
+  RIPPLED_RPM_VERSION=`echo "$RIPPLED_VERSION" | tr - _`
+  export RIPPLED_RPM_VERSION
 
-RIPPLED_VERSION=$(egrep -i -o "\b(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9a-z\-]+(\.[0-9a-z\-]+)*)?(\+[0-9a-z\-]+(\.[0-9a-z\-]+)*)?\b" src/ripple/protocol/impl/BuildInfo.cpp)
+  # Build and sign the rpm
+  cd ..
 
-# Convert dashes to underscores in rippled version for rpm compatibility
-RIPPLED_RPM_VERSION=`echo "$RIPPLED_VERSION" | tr - _`
-export RIPPLED_RPM_VERSION
+  tar -zcf ~/rpmbuild/SOURCES/rippled.tar.gz rippled/
 
-# Build and sign the rpm
-cd ..
+  rpmbuild -ba $1
+  rpmsign --key-id="Ripple Release Engineering" --addsign ~/rpmbuild/RPMS/x86_64/*.rpm ~/rpmbuild/SRPMS/*.rpm
 
-tar -zcf ~/rpmbuild/SOURCES/rippled.tar.gz rippled/
+  # Upload a tar of the rpm and source rpm to s3
+  tar -zvcf $RIPPLED_VERSION.tar.gz -C ~/rpmbuild/RPMS/x86_64/ . -C ~/rpmbuild/SRPMS/ .
+  aws s3 cp $RIPPLED_VERSION.tar.gz s3://$S3_BUCKET
 
-rpmbuild -ba $1
-rpmsign --key-id="Ripple Release Engineering" --addsign ~/rpmbuild/RPMS/x86_64/*.rpm ~/rpmbuild/SRPMS/*.rpm
+  MD5SUM=`rpm -Kv ~/rpmbuild/RPMS/x86_64/*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
+fi
 
-# Upload a tar of the rpm and source rpm to s3
-tar -zvcf $RIPPLED_VERSION.tar.gz -C ~/rpmbuild/RPMS/x86_64/ . -C ~/rpmbuild/SRPMS/ .
-aws s3 cp $RIPPLED_VERSION.tar.gz s3://$S3_BUCKET
+if [ -n "$ERROR" ]; then
+  echo $ERROR
+  aws sqs send-message --queue-url https://sqs.us-west-2.amazonaws.com/356003847803/rippled-rpm-failed --message-body "{\"stage\":\"rpm-builder\", \"error\":\"$ERROR\", \"yum_repo\":\"$YUM_REPO\", \"commit_hash\":\"$COMMIT_HASH\", \"md5sum\":\"$MD5SUM\", \"rippled_version\":\"$RIPPLED_VERSION\", \"commit_signer\":\"$COMMIT_SIGNER\"}" --region $AWS_REGION
+  exit 1
+fi
 
-MD5SUM=`rpm -Kv ~/rpmbuild/RPMS/x86_64/*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
-aws sqs send-message --queue-url https://sqs.us-west-2.amazonaws.com/356003847803/rippled-rpm-uploaded-test --message-body "{\"yum_repo\":\"ripple-stable\", \"commit_hash\":\"$COMMIT_HASH\", \"md5sum\":\"$MD5SUM\", \"rippled_version\":\"$RIPPLED_VERSION\", \"s3_bucket\":\"$S3_BUCKET\", \"s3_key\":\"$RIPPLED_VERSION.tar.gz\", \"aws_region\":\"$AWS_REGION\"}" --region $AWS_REGION
+aws sqs send-message --queue-url https://sqs.us-west-2.amazonaws.com/356003847803/rippled-rpm-uploaded --message-body "{\"yum_repo\":\"ripple-stable\", \"commit_hash\":\"$COMMIT_HASH\", \"md5sum\":\"$MD5SUM\", \"rippled_version\":\"$RIPPLED_VERSION\", \"s3_bucket\":\"$S3_BUCKET\", \"s3_key\":\"$RIPPLED_VERSION.tar.gz\", \"commit_signer\":\"$COMMIT_SIGNER\", \"aws_region\":\"$AWS_REGION\"}" --region $AWS_REGION

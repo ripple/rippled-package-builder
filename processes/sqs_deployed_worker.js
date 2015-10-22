@@ -1,7 +1,7 @@
 import SQSWorker from '../lib/SqsWorker'
 import Events from '../lib/events'
 
-const QUEUE_URL = 'https://sqs.us-west-2.amazonaws.com/356003847803/rippled-rpm-deployed-staging'
+const QUEUE_URL = 'https://sqs.us-west-2.amazonaws.com/356003847803/rippled-rpm-deployed'
 
 class RPMFile {
   constructor(message) {
@@ -11,6 +11,7 @@ class RPMFile {
       commit_hash: rpm_message.commit_hash,
       md5sum: rpm_message.md5sum,
       rippled_version: rpm_message.rippled_version,
+      commit_signer: rpm_message.commit_signer,
       yum_repo: rpm_message.yum_repo
     }
   }
