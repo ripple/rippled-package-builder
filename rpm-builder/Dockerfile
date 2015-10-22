@@ -34,15 +34,6 @@ RUN pip install awscli
 
 RUN git clone https://github.com/ripple/rippled.git
 
-COPY private.key ./
-
-RUN gpg --import private.key
-RUN gpg --export -a "Ripple Release Engineering" > RPM-GPG-KEY-ripple-release
-RUN rpm --import RPM-GPG-KEY-ripple-release
-RUN echo "%_gpg_name root" >> ~/.rpmmacros
-RUN echo "%_gpg /usr/bin/gpg" >> ~/.rpmmacros
-RUN echo "%_gpg_path /root/.gnupg" >> ~/.rpmmacros
-
 COPY run_script.sh ./
 COPY build_rpm.sh ./
 COPY rippled.spec ./

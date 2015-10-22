@@ -1,5 +1,12 @@
 #!/bin/bash
 
+gpg --import private.key
+gpg --export -a "Ripple Release Engineering" > RPM-GPG-KEY-ripple-release
+rpm --import RPM-GPG-KEY-ripple-release
+echo "%_gpg_name root" >> ~/.rpmmacros
+echo "%_gpg /usr/bin/gpg" >> ~/.rpmmacros
+echo "%_gpg_path /root/.gnupg" >> ~/.rpmmacros
+
 cd rippled
 git fetch origin
 
