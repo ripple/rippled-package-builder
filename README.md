@@ -30,6 +30,7 @@ All configuration is performed via environment variables:
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY
 - GPG_PASSPHRASE
+- S3_REGION
 - S3_BUCKET_STABLE
 - S3_BUCKET_UNSTABLE
 - S3_BUCKET_NIGHTLY

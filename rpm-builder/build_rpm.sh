@@ -38,7 +38,7 @@ else
 
   # Upload a tar of the rpm and source rpm to s3
   tar -zvcf $RIPPLED_VERSION.tar.gz -C ~/rpmbuild/RPMS/x86_64/ . -C ~/rpmbuild/SRPMS/ .
-  aws s3 cp $RIPPLED_VERSION.tar.gz s3://$S3_BUCKET
+  aws s3 cp $RIPPLED_VERSION.tar.gz s3://$S3_BUCKET --region $S3_REGION
 
   MD5SUM=`rpm -Kv ~/rpmbuild/RPMS/x86_64/*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
 fi

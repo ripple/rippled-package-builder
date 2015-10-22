@@ -2,7 +2,7 @@
 cd /home/docker/rpm-deployer/ansible
 
 mkdir rpms
-aws s3 cp  s3://$S3_BUCKET/$S3_KEY .
+aws s3 cp s3://$S3_BUCKET/$S3_KEY . --region $S3_REGION
 
 tar -zxvf $S3_KEY -C rpms
 
