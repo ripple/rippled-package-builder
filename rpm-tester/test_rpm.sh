@@ -6,21 +6,23 @@ function error {
   exit 1
 }
 
+RIPPLED_RPM_VERSION=`echo "$RIPPLED_VERSION" | tr - _`
+
 # Check rpm's md5sum
-yumdownloader --enablerepo=$YUM_REPO rippled
+yumdownloader --enablerepo=$YUM_REPO rippled-$RIPPLED_RPM_VERSION
 REPO_MD5SUM=`rpm -Kv *.x86_64.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
 if [ "$REPO_MD5SUM" != "$MD5SUM" ]; then
   error "md5sum mismatch ($REPO_MD5SUM)"
 fi
 
-yum install -y --enablerepo=$YUM_REPO rippled
+yum install -y --enablerepo=$YUM_REPO rippled-$RIPPLED_RPM_VERSION
 rc=$?; if [[ $rc != 0 ]]; then
-  error "error downloading rippled rpm from $YUM_REPO"
+  error "error downloading rippled-$RIPPLED_RPM_VERSION rpm from $YUM_REPO"
 fi
 
-yumdownloader --source --enablerepo=$YUM_REPO rippled
+yumdownloader --source --enablerepo=$YUM_REPO rippled-$RIPPLED_RPM_VERSION
 rc=$?; if [[ $rc != 0 ]]; then
-  error "error downloading rippled source rpm from $YUM_REPO"
+  error "error downloading rippled-$RIPPLED_RPM_VERSION source rpm from $YUM_REPO"
 fi
 
 rpm -i rippled-*.src.rpm
