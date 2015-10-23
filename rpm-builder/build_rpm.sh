@@ -6,7 +6,7 @@ function error {
   exit 1
 }
 
-gpg --import private.key
+gpg --import gpg/private.key
 rc=$?; if [[ $rc != 0 ]]; then
   error "error importing private.key"
 fi
