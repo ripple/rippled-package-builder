@@ -2,11 +2,11 @@
 
 function error {
   echo $1
-  aws sqs send-message --queue-url $SQS_QUEUE_FAILED --message-body "{\"stage\":\"rpm-builder\", \"error\":\"$1\", \"yum_repo\":\"$YUM_REPO\", \"commit_hash\":\"$COMMIT_HASH\", \"md5sum\":\"$MD5SUM\", \"rippled_version\":\"$RIPPLED_VERSION\", \"commit_signer\":\"$COMMIT_SIGNER\"}" --region $SQS_REGION
+  aws sqs send-message --queue-url $SQS_QUEUE_FAILED --message-body "{\"stage\":\"rpm-builder\", \"error\":\"$1\", \"yum_repo\":\"$YUM_REPO\", \"commit_hash\":\"$COMMIT_HASH\", \"md5sum\":\"$MD5SUM\", \"rippled_version\":\"$RIPPLED_RPM_VERSION\", \"commit_signer\":\"$COMMIT_SIGNER\"}" --region $SQS_REGION
   exit 1
 }
 
-gpg --import private.key
+gpg --import gpg/private.key
 rc=$?; if [[ $rc != 0 ]]; then
   error "error importing private.key"
 fi
@@ -64,7 +64,7 @@ fi
 
 MD5SUM=`rpm -Kv ~/rpmbuild/RPMS/x86_64/*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
 
-aws sqs send-message --queue-url $SQS_QUEUE_UPLOADED --message-body "{\"yum_repo\":\"$YUM_REPO\", \"commit_hash\":\"$COMMIT_HASH\", \"md5sum\":\"$MD5SUM\", \"rippled_version\":\"$RIPPLED_VERSION\", \"s3_bucket\":\"$S3_BUCKET\", \"s3_key\":\"$RIPPLED_VERSION.tar.gz\", \"commit_signer\":\"$COMMIT_SIGNER\"}" --region $SQS_REGION
+aws sqs send-message --queue-url $SQS_QUEUE_UPLOADED --message-body "{\"yum_repo\":\"$YUM_REPO\", \"commit_hash\":\"$COMMIT_HASH\", \"md5sum\":\"$MD5SUM\", \"rippled_version\":\"$RIPPLED_RPM_VERSION\", \"s3_bucket\":\"$S3_BUCKET\", \"s3_key\":\"$RIPPLED_VERSION.tar.gz\", \"commit_signer\":\"$COMMIT_SIGNER\"}" --region $SQS_REGION
 rc=$?; if [[ $rc != 0 ]]; then
   error "error sending message to $SQS_QUEUE_UPLOADED"
 fi
