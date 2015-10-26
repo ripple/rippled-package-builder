@@ -5,11 +5,10 @@ class Worker extends SQSWorker {
 
   onMessage(message, done) {
 
-    let commit
 
     try {
       const git_commit = JSON.parse(message.Body)
-      commit = {
+      let commit = {
         commit_hash: git_commit.after
       }
 
@@ -31,13 +30,13 @@ class Worker extends SQSWorker {
           break
         default:
           done()
+          return
       }
+      Events.emit('sqs:rippled:commit:pushed', commit)
+
     } catch(error) {
       console.log("error", error)
-      done()
     }
-
-    Events.emit('sqs:rippled:commit:pushed', commit)
 
     done()
   }

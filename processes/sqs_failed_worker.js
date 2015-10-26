@@ -18,16 +18,13 @@ class Worker extends SQSWorker {
 
   onMessage(message, done) {
 
-    let error_message
-
     try {
-      error_message = new ErrorMessage(message)
+      let error_message = new ErrorMessage(message)
+      Events.emit('sqs:rpm:failed', error_message)
     } catch(error) {
       console.log("error", error)
-      done()
     }
 
-    Events.emit('sqs:rpm:failed', error_message)
 
     done()
   }
