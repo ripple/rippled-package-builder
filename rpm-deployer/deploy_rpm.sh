@@ -23,7 +23,7 @@ if [ "$S3_MD5SUM" != "$MD5SUM" ]; then
   error "md5sum mismatch ($S3_MD5SUM)"
 fi
 
-ansible-playbook -vvv -i hosts staging.yml
+ansible-playbook -e yum_repo=${YUM_REPO/ripple-/} -vvv -i hosts staging.yml
 rc=$?; if [[ $rc != 0 ]]; then
   error "error deploying to $YUM_REPO with ansible"
 fi
