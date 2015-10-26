@@ -19,16 +19,12 @@ class Worker extends SQSWorker {
 
   onMessage(message, done) {
 
-    var rpmFile
-
     try {
-      rpmFile = new RPMFile(message)
+      let rpmFile = new RPMFile(message)
+      Events.emit('sqs:rpm:deployed', rpmFile)
     } catch(error) {
       console.log("error", error)
-      done()
     }
-
-    Events.emit('sqs:rpm:deployed', rpmFile)
 
     done()
   }
