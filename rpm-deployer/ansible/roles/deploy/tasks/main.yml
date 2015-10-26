@@ -1,6 +1,6 @@
 ---
 - name: Copy rpm and source rpm
-  copy: src=./rpms/ dest=/var/packages/rpm/el7/stable/x86_64/
+  copy: src=./rpms/ dest=/var/packages/rpm/el7/{{yum_repo}}/x86_64/
 
 - name: Re-index RPM repository
-  shell: createrepo /var/packages/rpm/el7/stable/x86_64
+  shell: createrepo /var/packages/rpm/el7/{{yum_repo}}/x86_64
