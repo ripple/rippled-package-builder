@@ -14,6 +14,14 @@ RUN cd /usr/src && \
     make all && \
     make install
 
+# Install gcc 5.2
+RUN svn co svn://gcc.gnu.org/svn/gcc/tags/gcc_5_2_0_release gcc && \
+    cd gcc && \
+    ./contrib/download_prerequisites && \
+    ./configure --prefix=/usr --disable-multilib --enable-languages=c,c++ && \
+    make -j `nproc` && \
+    make install
+
 RUN rpm -Uvh https://mirrors.ripple.com/ripple-repo-el7.rpm
 RUN yum install -y --enablerepo=ripple-stable scons protobuf-devel ripple-boost ripple-boost-devel ripple-openssl-devel openssl-devel ripple-boost-coroutine
 

@@ -23,7 +23,7 @@ rippled
 %setup -n rippled
 
 %build
-scons %{?_smp_mflags}
+RIPPLED_OLD_GCC_ABI=1 scons %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
