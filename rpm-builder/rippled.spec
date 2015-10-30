@@ -23,7 +23,11 @@ rippled
 %setup -n rippled
 
 %build
-RIPPLED_OLD_GCC_ABI=1 scons %{?_smp_mflags}
+if [ "$RIPPLED_RPM_VERSION" == "0.30.0" ]; then
+  RIPPLED_OLD_GCC_ABI=1 scons %{?_smp_mflags}
+else
+  RIPPLED_OLD_GCC_ABI=0 scons %{?_smp_mflags} --static
+fi
 
 %install
 rm -rf $RPM_BUILD_ROOT

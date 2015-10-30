@@ -22,16 +22,23 @@ RUN svn co svn://gcc.gnu.org/svn/gcc/tags/gcc_5_2_0_release gcc && \
     make -j `nproc` && \
     make install
 
+# Use Fedora EPEL for protobuf-static
+RUN wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+RUN rpm -ivh epel-release-7-5.noarch.rpm
 RUN rpm -Uvh https://mirrors.ripple.com/ripple-repo-el7.rpm
-RUN yum install -y --enablerepo=ripple-stable scons protobuf-devel ripple-boost ripple-boost-devel ripple-openssl-devel openssl-devel ripple-boost-coroutine
+RUN yum install -y --enablerepo=ripple-stable scons protobuf-devel protobuf-static ripple-boost ripple-boost-devel ripple-boost-static ripple-openssl-devel ripple-openssl-static openssl-devel ripple-boost-coroutine
 
 RUN mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 RUN echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
+
+# ripple-openssl-static is missing libboost_thread.a
+RUN ln -s /opt/ripple/boost/lib/libboost_thread-mt.a /opt/ripple/boost/lib/libboost_thread.a
 
 RUN ln -s /opt/ripple/boost/include/boost /usr/include/boost
 RUN ln -s /opt/ripple/boost/lib/* /lib64/
 RUN ln -s -f /opt/ripple/openssl/include/openssl/* /usr/include/openssl/
 RUN ln -s -f /opt/ripple/openssl/lib/*.so* /lib64/
+RUN ln -s -f /opt/ripple/openssl/lib/*.a /lib64/
 RUN ln -s -f /opt/ripple/openssl/lib/openssl /lib64/openssl
 RUN ln -s -f /opt/ripple/openssl/lib/pkgconfig/* /lib64/pkgconfig/
 RUN ldconfig
