@@ -7,7 +7,7 @@ function error {
 }
 
 # Check rpm's md5sum
-yumdownloader --enablerepo=$YUM_REPO rippled-$RIPPLED_VERSION
+yumdownloader --enablerepo=$YUM_REPO rippled-$RIPPLED_VERSION-1.el7.centos
 REPO_MD5SUM=`rpm -Kv *.x86_64.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
 if [ "$REPO_MD5SUM" != "$MD5SUM" ]; then
   error "md5sum mismatch ($REPO_MD5SUM)"
