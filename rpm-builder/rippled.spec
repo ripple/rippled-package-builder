@@ -12,6 +12,7 @@ URL:            http://ripple.com/
 Source0:        rippled.tar.gz
 Source1:        rippled.service
 Source2:        50-rippled.preset
+Source3:        wrapper.sh
 
 BuildRequires:  scons ripple-boost-devel protobuf-devel ripple-openssl-devel
 Requires:       ripple-openssl-libs
@@ -32,13 +33,34 @@ echo "Installing to /opt/ripple/"
 install -D doc/rippled-example.cfg ${RPM_BUILD_ROOT}%{_prefix}/etc/rippled.cfg
 install -D build/gcc.release/rippled ${RPM_BUILD_ROOT}%{_bindir}/rippled
 install -D %{SOURCE1} ${RPM_BUILD_ROOT}/usr/lib/systemd/system/rippled.service
-install -D %{SOURCE1} ${RPM_BUILD_ROOT}/usr/lib/systemd/system-preset/50-rippled.preset
+install -D %{SOURCE2} ${RPM_BUILD_ROOT}/usr/lib/systemd/system-preset/50-rippled.preset
+install -D %{SOURCE3} ${RPM_BUILD_ROOT}%{_bindir}/wrapper.sh
+
+install -d $RPM_BUILD_ROOT/var/log/rippled
+install -d $RPM_BUILD_ROOT/var/lib/rippled
+
+%post
+USER_NAME=rippled
+GROUP_NAME=rippled
+
+getent passwd $USER_NAME &>/dev/null || useradd $USER_NAME
+getent group $GROUP_NAME &>/dev/null || groupadd $GROUP_NAME
+
+chown -R $USER_NAME:$GROUP_NAME /var/log/rippled/
+chown -R $USER_NAME:$GROUP_NAME /var/lib/rippled/
+chown -R $USER_NAME:$GROUP_NAME %{_prefix}/
+
+chmod 755 /var/log/rippled/
+chmod 755 /var/lib/rippled/
 
 %files
 %doc README.md LICENSE
 %{_bindir}/rippled
+%{_bindir}/wrapper.sh
 %config(noreplace) %{_prefix}/etc/rippled.cfg
 /usr/lib/systemd/system/rippled.service
 /usr/lib/systemd/system-preset/50-rippled.preset
+%dir /var/log/rippled/
+%dir /var/lib/rippled/
 
 %changelog
