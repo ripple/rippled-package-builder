@@ -40,6 +40,9 @@ All configuration is performed via environment variables:
 - SQS_QUEUE_DEPLOYED
 - SQS_QUEUE_TESTED
 - SQS_QUEUE_FAILED
+- STAGING_YUM_HOST
+- STAGING_YUM_USER
+- STAGING_YUM_PEM_FILE (optional)
 - SLACK_TOKEN
 
 `GPG_PASSPHRASE` should correspond to a gpg private key named **Ripple Release Engineering**, which is used to sign built packages. Ansible deployment expects the gpg key to be found in /etc/gpg/private.key

@@ -1,7 +1,7 @@
 ---
 - name: Deploy RPM to server
-  hosts: staging
-  remote_user: ubuntu
+  hosts: all
+  remote_user: "{{ remote_user }}"
   sudo: yes
   roles:
     - deploy
