@@ -23,7 +23,18 @@ if [ "$S3_MD5SUM" != "$MD5SUM" ]; then
   error "md5sum mismatch ($S3_MD5SUM)"
 fi
 
-ansible-playbook -e yum_repo=${YUM_REPO/ripple-/} -vvv -i hosts staging.yml
+if [ -z "$STAGING_YUM_HOST" ]; then
+  error "missing STAGING_YUM_HOST"
+elif [ -z "$STAGING_YUM_USER" ]; then
+  error "missing STAGING_YUM_USER"
+fi
+
+if [ -z "$STAGING_YUM_PEM_FILE" ]; then
+  ansible-playbook -e yum_repo=${YUM_REPO/ripple-/} -e remote_user=$STAGING_YUM_USER -vvv -i $STAGING_YUM_HOST, staging.yml
+else
+  ansible-playbook -e yum_repo=${YUM_REPO/ripple-/} -e remote_user=$STAGING_YUM_USER -e ansible_ssh_private_key_file=$STAGING_YUM_PEM_FILE -vvv -i $STAGING_YUM_HOST, staging.yml
+fi
+
 rc=$?; if [[ $rc != 0 ]]; then
   error "error deploying to $YUM_REPO with ansible"
 fi
