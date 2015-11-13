@@ -2,7 +2,6 @@
 
 function error {
   echo $1
-  aws sqs send-message --queue-url $SQS_QUEUE_FAILED --message-body "{\"stage\":\"rpm-tester\", \"error\":\"$1\", \"yum_repo\":\"$YUM_REPO\", \"commit_hash\":\"$COMMIT_HASH\", \"md5sum\":\"$MD5SUM\", \"rippled_version\":\"$RIPPLED_VERSION\", \"commit_signer\":\"$COMMIT_SIGNER\"}" --region $SQS_REGION
   exit 1
 }
 
@@ -30,17 +29,12 @@ npm install
 mkdir build
 ln -s /opt/ripple/bin/rippled build/rippled
 
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ripple/openssl/lib:/opt/ripple/boost/lib /opt/ripple/bin/rippled --unittest
+/opt/ripple/bin/rippled --unittest
 rc=$?; if [[ $rc != 0 ]]; then
   error "rippled --unittest failed"
 fi
 
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ripple/openssl/lib:/opt/ripple/boost/lib npm test
+npm test
 rc=$?; if [[ $rc != 0 ]]; then
   error "npm test failed"
-fi
-
-aws sqs send-message --queue-url $SQS_QUEUE_TESTED --message-body "{\"yum_repo\":\"$YUM_REPO\", \"commit_hash\":\"$COMMIT_HASH\", \"md5sum\":\"$MD5SUM\", \"rippled_version\":\"$RIPPLED_VERSION\", \"commit_signer\":\"$COMMIT_SIGNER\"}" --region $SQS_REGION
-rc=$?; if [[ $rc != 0 ]]; then
-  error "error sending message to $SQS_QUEUE_TESTED"
 fi
