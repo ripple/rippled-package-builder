@@ -1,7 +1,0 @@
----
-- name: Deploy RPM to server
-  hosts: all
-  remote_user: "{{ remote_user }}"
-  sudo: yes
-  roles:
-    - deploy
