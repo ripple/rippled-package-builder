@@ -62,8 +62,8 @@ chmod 755 /var/lib/rippled/
 %{_bindir}/rippled
 %{_bindir}/wrapper.sh
 %config(noreplace) %{_prefix}/etc/rippled.cfg
-/usr/lib/systemd/system/rippled.service
-/usr/lib/systemd/system-preset/50-rippled.preset
+%config(noreplace) /usr/lib/systemd/system/rippled.service
+%config(noreplace) /usr/lib/systemd/system-preset/50-rippled.preset
 %dir /var/log/rippled/
 %dir /var/lib/rippled/
 
