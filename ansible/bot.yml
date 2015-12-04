@@ -1,7 +1,0 @@
----
-- name: Provision application container host
-  hosts: all
-  sudo: true
-  user: ec2-user
-  roles:
-    - bot
