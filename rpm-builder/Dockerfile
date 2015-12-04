@@ -55,4 +55,8 @@ COPY rippled.service /root/rpmbuild/SOURCES/
 COPY 50-rippled.preset /root/rpmbuild/SOURCES/
 COPY wrapper.sh /root/rpmbuild/SOURCES/
 
+# Import rippled dev public keys
+COPY public-keys.txt ./
+RUN gpg --import public-keys.txt
+
 CMD ./build_rpm.sh
