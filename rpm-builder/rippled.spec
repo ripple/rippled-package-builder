@@ -24,7 +24,7 @@ rippled
 %setup -n rippled
 
 %build
-if [ "$RIPPLED_RPM_VERSION" == "0.30.0" ]; then
+if [[ $RIPPLED_RPM_VERSION == "0.30.0"* ]]; then
   RIPPLED_OLD_GCC_ABI=1 scons %{?_smp_mflags}
 else
   RIPPLED_OLD_GCC_ABI=0 scons %{?_smp_mflags} --static
