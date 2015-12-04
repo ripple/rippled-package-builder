@@ -49,7 +49,6 @@ RUN pip install awscli
 
 RUN git clone https://github.com/ripple/rippled.git
 
-COPY run_script.sh ./
 COPY build_rpm.sh ./
 COPY rippled.spec ./
 COPY rippled.service /root/rpmbuild/SOURCES/
