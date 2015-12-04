@@ -13,6 +13,7 @@ Source0:        rippled.tar.gz
 Source1:        rippled.service
 Source2:        50-rippled.preset
 Source3:        wrapper.sh
+Source4:        rippled-0.30.0.x86_64.conf
 
 BuildRequires:  scons ripple-boost-devel protobuf-devel ripple-openssl-devel
 Requires:       ripple-openssl-libs
@@ -39,6 +40,7 @@ install -D build/gcc.release/rippled ${RPM_BUILD_ROOT}%{_bindir}/rippled
 install -D %{SOURCE1} ${RPM_BUILD_ROOT}/usr/lib/systemd/system/rippled.service
 install -D %{SOURCE2} ${RPM_BUILD_ROOT}/usr/lib/systemd/system-preset/50-rippled.preset
 install -D %{SOURCE3} ${RPM_BUILD_ROOT}%{_bindir}/wrapper.sh
+install -D %{SOURCE4} ${RPM_BUILD_ROOT}/etc/ld.so.conf.d/rippled-0.30.0.x86_64.conf
 
 install -d $RPM_BUILD_ROOT/var/log/rippled
 install -d $RPM_BUILD_ROOT/var/lib/rippled
@@ -57,6 +59,8 @@ chown -R $USER_NAME:$GROUP_NAME %{_prefix}/
 chmod 755 /var/log/rippled/
 chmod 755 /var/lib/rippled/
 
+ldconfig
+
 %files
 %doc README.md LICENSE
 %{_bindir}/rippled
@@ -64,6 +68,7 @@ chmod 755 /var/lib/rippled/
 %config(noreplace) %{_prefix}/etc/rippled.cfg
 %config(noreplace) /usr/lib/systemd/system/rippled.service
 %config(noreplace) /usr/lib/systemd/system-preset/50-rippled.preset
+/etc/ld.so.conf.d/rippled-0.30.0.x86_64.conf
 %dir /var/log/rippled/
 %dir /var/lib/rippled/
 
