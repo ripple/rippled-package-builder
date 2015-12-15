@@ -16,7 +16,6 @@ Source3:        wrapper.sh
 Source4:        rippled-0.30.0.x86_64.conf
 
 BuildRequires:  scons ripple-boost-devel protobuf-devel ripple-openssl-devel
-Requires:       ripple-openssl-libs
 
 %description
 rippled
