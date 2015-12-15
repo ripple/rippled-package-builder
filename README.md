@@ -25,5 +25,11 @@ docker build -t rippled-rpm-builder rpm-builder/
 ## Run
 
 ```
-docker run -e GIT_BRANCH=develop -v <path-to-out-dir>:/out rippled-rpm-builder
+docker run -e GIT_BRANCH=develop -v <path-to-out-dir>:/opt/rippled-rpm/out rippled-rpm-builder
+```
+
+## Test
+
+```
+./run_test.sh
 ```
