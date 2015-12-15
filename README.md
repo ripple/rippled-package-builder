@@ -2,9 +2,9 @@
 
 Docker image for building rippled rpms
 
-The rpm-builder docker container builds a rippled rpm from the specified git branch and uploads the rpm to an AWS S3 bucket.
+The rpm-builder docker container builds a rippled rpm from the specified git branch and puts a tar.gz of rpms in a mounted directory.
 
-Writes `md5sum`, `rippled_version`, and `s3key` to `build_vars` file in mounted directory.
+Writes `md5sum`, `rippled_version`, and `rpm_file_name` variables to `build_vars` properties file in mounted directory.
 
 ## Dependencies
 
@@ -15,10 +15,6 @@ Writes `md5sum`, `rippled_version`, and `s3key` to `build_vars` file in mounted 
 All configuration is performed via environment variables:
 
 - GIT_BRANCH: rippled branch to package
-- AWS_ACCESS_KEY_ID
-- AWS_SECRET_ACCESS_KEY
-- S3_BUCKET
-- S3_REGION
 
 ## Build
 
@@ -29,5 +25,11 @@ docker build -t rippled-rpm-builder rpm-builder/
 ## Run
 
 ```
-docker run -e GIT_BRANCH=develop -e AWS_ACCESS_KEY_ID=your-key-id -e AWS_SECRET_ACCESS_KEY=your-access-key -e S3_BUCKET=your-bucket -e S3_REGION=your-region -v <path-to-put-build_vars_dir>:/out rippled-rpm-builder
+docker run -e GIT_BRANCH=develop -v <path-to-out-dir>:/opt/rippled-rpm/out rippled-rpm-builder
+```
+
+## Test
+
+```
+./run_test.sh
 ```
