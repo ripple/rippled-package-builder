@@ -14,13 +14,9 @@ RUN cd /usr/src && \
     make all && \
     make install
 
-# Install gcc 5.2
-RUN svn co svn://gcc.gnu.org/svn/gcc/tags/gcc_5_2_0_release gcc && \
-    cd gcc && \
-    ./contrib/download_prerequisites && \
-    ./configure --prefix=/usr --disable-multilib --enable-languages=c,c++ && \
-    make -j `nproc` && \
-    make install
+# Install GCC 5
+COPY Fedora-Core23.repo /etc/yum.repos.d/
+RUN yum install -y gcc gcc-c++ libstdc++-static --enablerepo=warning:fedora
 
 # Use Fedora EPEL for protobuf-static
 RUN wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
