@@ -15,7 +15,6 @@ Source2:        50-rippled.preset
 Source3:        wrapper.sh
 
 BuildRequires:  scons ripple-boost-devel protobuf-devel ripple-openssl-devel
-Requires:       ripple-openssl-libs
 
 %description
 rippled
