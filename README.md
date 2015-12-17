@@ -1,61 +1,35 @@
 # Rippled Package Builder
 
-Responds to events from the rippled repository on Github,
-and runs the Rippled packaging processes to output RPM builds.
+Docker image for building rippled rpms
+
+The rpm-builder docker container builds a rippled rpm from the specified git branch and puts a tar.gz of rpms in a mounted directory.
+
+Writes `md5sum`, `rippled_version`, and `rpm_file_name` variables to `build_vars` properties file in mounted directory.
 
 ## Dependencies
 
-- nodejs 4.1.0
 - docker
-
-## Setup
-
-Install the node.js module dependencies:
-
-```
-npm install
-```
-
-The application relies on the rpm-builder images to exist, which must be
-built first using the following command:
-
-```
-npm run rpm-builder:setup
-```
 
 ## Configuration
 
 All configuration is performed via environment variables:
 
-- AWS_ACCESS_KEY_ID
-- AWS_SECRET_ACCESS_KEY
-- GPG_PASSPHRASE
-- S3_BUCKET
-- SLACK_TOKEN
+- GIT_BRANCH: rippled branch to package
 
-`GPG_PASSPHRASE` should correspond to a gpg key named **Ripple Release Engineering**, which is used to sign built packages.
-
-## Deployment
-
-The following environment variables must be set to deploy from Circle CI
-
-- DOCKER_EMAIL
-- DOCKER_USERNAME
-- DOCKER_PASSWORD
-
-## Usage
-
-Start the node.js build bot application, which will spawn subsequent containers to run build jobs:
+## Build
 
 ```
-docker run -it -v /var/run/docker.sock:/var/run/docker.sock -p 5000:5000 -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY rippled-build-bot
+docker build -t rippled-rpm-builder rpm-builder/
 ```
 
-Upon receipt of a release message from github the software
-will launch a docker container that builds an RPM with the
-given release. The following command is executed:
+## Run
 
 ```
-sudo docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e "RIPPLED_BRANCH=release" -e GPG_PASSPHRASE=<passphrase> -e S3_BUCKET=rpm-builder-test -v $PWD:/opt/rippled-rpm/out -it rippled-rpm-builder
+docker run -e GIT_BRANCH=develop -v <path-to-out-dir>:/opt/rippled-rpm/out rippled-rpm-builder
 ```
 
+## Test
+
+```
+./run_test.sh
+```

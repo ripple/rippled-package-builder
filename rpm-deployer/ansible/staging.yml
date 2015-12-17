@@ -1,7 +1,0 @@
----
-- name: Deploy RPM to server
-  hosts: staging
-  remote_user: ubuntu
-  sudo: yes
-  roles:
-    - deploy
