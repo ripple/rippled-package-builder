@@ -35,15 +35,12 @@ rc=$?; if [[ $rc != 0 ]]; then
   error "error building rpm"
 fi
 
-# Upload a tar of the rpm and source rpm to s3
+# Make a tar of the rpm and source rpm
 tar -zvcf $RIPPLED_VERSION.tar.gz -C ~/rpmbuild/RPMS/x86_64/ . -C ~/rpmbuild/SRPMS/ .
-aws s3 cp $RIPPLED_VERSION.tar.gz s3://$S3_BUCKET --region $S3_REGION
-rc=$?; if [[ $rc != 0 ]]; then
-  error "error uploading $RIPPLED_VERSION.tar.gz to s3://$S3_BUCKET"
-fi
+cp $RIPPLED_VERSION.tar.gz /opt/rippled-rpm/out/
 
 MD5SUM=`rpm -Kv ~/rpmbuild/RPMS/x86_64/*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
 
 echo "md5sum=$MD5SUM" >> /opt/rippled-rpm/out/build_vars
 echo "rippled_version=$RIPPLED_RPM_VERSION" >> /opt/rippled-rpm/out/build_vars
-echo "s3key=$RIPPLED_VERSION.tar.gz" >> /opt/rippled-rpm/out/build_vars
+echo "rpm_file_name=$RIPPLED_VERSION.tar.gz" >> /opt/rippled-rpm/out/build_vars

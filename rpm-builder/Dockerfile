@@ -32,10 +32,6 @@ RUN ln -s -f /opt/ripple/openssl/lib/openssl /lib64/openssl
 RUN ln -s -f /opt/ripple/openssl/lib/pkgconfig/* /lib64/pkgconfig/
 RUN ldconfig
 
-RUN curl -O https://bootstrap.pypa.io/get-pip.py
-RUN python get-pip.py
-RUN pip install awscli
-
 RUN git clone https://github.com/ripple/rippled.git
 
 COPY build_rpm.sh ./
