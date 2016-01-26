@@ -1,5 +1,5 @@
-[warning:fedora]
-name=fedora
+[warning:fedora23]
+name=fedora23
 mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-23&arch=$basearch
 enabled=0
 gpgcheck=0
