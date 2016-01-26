@@ -7,7 +7,7 @@ RUN yum groupinstall -y "Development Tools"
 RUN yum install -y rpm-sign rpmdevtools krb5-devel zlib-devel gcc gcc-c++ wget libstdc++-devel bzip2-devel python-devel libicu-devel chrpath curl-devel expat-devel gettext-devel openssl-devel perl-devel libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
 RUN cd /usr/src && \
     wget https://www.kernel.org/pub/software/scm/git/git-2.6.2.tar.gz && \
-    tar xzf git-2.6.2.tar.gz && \
+    tar xzf git-2.6.2.tar.gz --owner root --group root --no-same-owner && \
     cd git-2.6.2 && \
     make configure && \
     ./configure --prefix=/usr && \
