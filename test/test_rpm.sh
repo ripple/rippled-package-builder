@@ -5,7 +5,7 @@ function error {
   exit 1
 }
 
-yum groupinstall -y "Development Tools"
+yum install -y make gcc-c++
 curl --silent --location https://rpm.nodesource.com/setup | bash -
 yum install -y yum-utils nodejs
 
