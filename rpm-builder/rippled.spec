@@ -13,7 +13,7 @@ Source0:        rippled.tar.gz
 Source1:        rippled.service
 Source2:        50-rippled.preset
 
-BuildRequires:  scons boost-devel protobuf-devel ripple-openssl-devel
+BuildRequires:  scons boost-devel protobuf-devel openssl-devel
 
 %description
 rippled
