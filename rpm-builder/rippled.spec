@@ -1,10 +1,11 @@
 %define rippled_version %(echo $RIPPLED_RPM_VERSION)
+%define rpm_release %(echo $RPM_RELEASE)
 %define         debug_package %{nil}
 %define _prefix /opt/ripple
 Name:           rippled
 # Dashes in Version extensions must be converted to underscores
 Version:        %{rippled_version}
-Release:        1%{?dist}
+Release:        %{rpm_release}%{?dist}
 Summary:        rippled daemon
 
 License:        MIT
@@ -22,11 +23,7 @@ rippled
 %setup -n rippled
 
 %build
-if [[ $RIPPLED_RPM_VERSION == "0.30.0"* ]]; then
-  RIPPLED_OLD_GCC_ABI=1 scons %{?_smp_mflags}
-else
-  RIPPLED_OLD_GCC_ABI=0 scons %{?_smp_mflags} --static
-fi
+RIPPLED_OLD_GCC_ABI=0 scons %{?_smp_mflags} --static
 
 %install
 rm -rf $RPM_BUILD_ROOT
