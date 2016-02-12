@@ -3,7 +3,7 @@ set -e
 
 # build rpm
 docker build -t rippled-rpm-builder rpm-builder/
-docker run -e GIT_BRANCH=develop -v $PWD/test/:/opt/rippled-rpm/out rippled-rpm-builder
+docker run -e RPM_RELEASE=3 -e GIT_BRANCH=release -v $PWD/test/:/opt/rippled-rpm/out rippled-rpm-builder
 
 # source properties
 . test/build_vars
