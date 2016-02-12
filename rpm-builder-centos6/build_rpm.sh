@@ -5,9 +5,6 @@ function error {
   exit 1
 }
 
-GIT_BRANCH=${GIT_BRANCH-develop}
-RPM_RELEASE=${RPM_RELEASE-1}
-
 cd rippled
 git fetch origin
 
@@ -39,12 +36,11 @@ rc=$?; if [[ $rc != 0 ]]; then
 fi
 
 # Make a tar of the rpm and source rpm
-tar_file=$RIPPLED_VERSION-$RPM_RELEASE.tar.gz
-tar -zvcf $tar_file -C ~/rpmbuild/RPMS/x86_64/ . -C ~/rpmbuild/SRPMS/ .
-cp $tar_file /opt/rippled-rpm/out/
+tar -zvcf $RIPPLED_VERSION.tar.gz -C ~/rpmbuild/RPMS/x86_64/ . -C ~/rpmbuild/SRPMS/ .
+cp $RIPPLED_VERSION.tar.gz /opt/rippled-rpm/out/
 
 MD5SUM=`rpm -Kv ~/rpmbuild/RPMS/x86_64/*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
 
 echo "md5sum=$MD5SUM" > /opt/rippled-rpm/out/build_vars
 echo "rippled_version=$RIPPLED_RPM_VERSION" >> /opt/rippled-rpm/out/build_vars
-echo "rpm_file_name=$tar_file" >> /opt/rippled-rpm/out/build_vars
+echo "rpm_file_name=$RIPPLED_VERSION.tar.gz" >> /opt/rippled-rpm/out/build_vars
