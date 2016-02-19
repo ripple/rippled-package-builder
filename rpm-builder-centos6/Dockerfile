@@ -20,7 +20,7 @@ RUN cd gcc-mirror-gcc-cf82a59 && \
     make install
 
 # Build Boost 1.60 rpm from Fedora Rawhide source rpm
-RUN wget http://mirror.utexas.edu/fedora/linux/development/rawhide/source/SRPMS/b/boost-1.60.0-2.fc24.src.rpm
+RUN wget -r -l1 -nd -A 'boost-1.60.*.src.rpm' http://mirror.utexas.edu/fedora/linux/development/rawhide/source/SRPMS/b/
 
 RUN yum install -y libstdc++-devel bzip2-devel python-devel libicu-devel which openmpi-devel mpich-devel m4
 
@@ -30,7 +30,7 @@ RUN yum install -y python34u-devel
 RUN mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 RUN echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
 
-RUN rpm -i boost-1.60.0-2.fc24.src.rpm
+RUN rpm -i boost-1.60.*.src.rpm
 COPY boost.spec /root/rpmbuild/SPECS/boost.spec
 RUN rpmbuild -ba ~/rpmbuild/SPECS/boost.spec --nodeps
 
