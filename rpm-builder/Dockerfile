@@ -18,14 +18,13 @@ RUN rpmbuild -bb $(rpm -E %_specdir)/openssl.spec
 RUN rpm -Uvh --force ~/rpmbuild/RPMS/x86_64/openssl-1.0.1e-*.x86_64.rpm ~/rpmbuild/RPMS/x86_64/openssl-libs-1.0.1e-*.x86_64.rpm ~/rpmbuild/RPMS/x86_64/openssl-devel-1.0.1e-*.x86_64.rpm ~/rpmbuild/RPMS/x86_64/openssl-static-1.0.1e-*.x86_64.rpm
 
 # Build Boost 1.60 rpm from Fedora Rawhide source rpm
-COPY Fedora-Rawhide.repo /etc/yum.repos.d/
-RUN yumdownloader --source --enablerepo=warning:rawhide boost
+COPY boost-1.60.0-4.fc24.src.rpm ./
 
 RUN yum install -y rpm-build libstdc++-devel bzip2-devel python-devel libicu-devel openmpi-devel mpich-devel m4 which tar
 COPY Fedora-Core23.repo /etc/yum.repos.d/
 RUN yum install -y --enablerepo=warning:fedora23 python3-devel
 
-RUN rpmbuild --rebuild boost-1.60.*.src.rpm
+RUN rpmbuild --rebuild boost-1.60.0-4.fc24.src.rpm
 
 # Install boost
 RUN mkdir -p /share/CentOS/7/local/x86_64/RPMS/
