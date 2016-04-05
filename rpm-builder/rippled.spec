@@ -1,6 +1,6 @@
 %define rippled_version %(echo $RIPPLED_RPM_VERSION)
 %define rpm_release %(echo $RPM_RELEASE)
-%define         debug_package %{nil}
+%define         debug_package
 %define _prefix /opt/ripple
 Name:           rippled
 # Dashes in Version extensions must be converted to underscores
