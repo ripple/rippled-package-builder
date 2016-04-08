@@ -12,7 +12,7 @@ yum install -y yum-utils nodejs
 # Check rpm's md5sum
 mkdir rpms
 tar -zxvf in/$RPM_FILE_NAME -C rpms
-rpm_md5sum="$(rpm -Kv rpms/rippled-0*.x86_64.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+')"
+rpm_md5sum="$(rpm -Kv rpms/rippled-[0-9]*.x86_64.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+')"
 dbg_md5sum="$(rpm -Kv rpms/rippled-debuginfo*.x86_64.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+')"
 src_md5sum="$(rpm -Kv rpms/rippled*.src.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+')"
 
