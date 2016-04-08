@@ -44,7 +44,7 @@ tar_file=$RIPPLED_VERSION-$RPM_RELEASE.tar.gz
 tar -zvcf $tar_file -C ~/rpmbuild/RPMS/x86_64/ . -C ~/rpmbuild/SRPMS/ .
 cp $tar_file /opt/rippled-rpm/out/
 
-RPM_MD5SUM=`rpm -Kv ~/rpmbuild/RPMS/x86_64/rippled-0*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
+RPM_MD5SUM=`rpm -Kv ~/rpmbuild/RPMS/x86_64/rippled-[0-9]*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
 DBG_MD5SUM=`rpm -Kv ~/rpmbuild/RPMS/x86_64/rippled-debuginfo*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
 SRC_MD5SUM=`rpm -Kv ~/rpmbuild/SRPMS/*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
 
