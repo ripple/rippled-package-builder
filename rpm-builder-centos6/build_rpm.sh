@@ -5,10 +5,6 @@ function error {
   exit 1
 }
 
-GIT_BRANCH=${GIT_BRANCH-develop}
-RPM_RELEASE=${RPM_RELEASE-1}
-export RPM_RELEASE
-
 cd rippled
 git fetch origin
 
@@ -40,16 +36,11 @@ rc=$?; if [[ $rc != 0 ]]; then
 fi
 
 # Make a tar of the rpm and source rpm
-tar_file=$RIPPLED_VERSION-$RPM_RELEASE.tar.gz
-tar -zvcf $tar_file -C ~/rpmbuild/RPMS/x86_64/ . -C ~/rpmbuild/SRPMS/ .
-cp $tar_file /opt/rippled-rpm/out/
+tar -zvcf $RIPPLED_VERSION.tar.gz -C ~/rpmbuild/RPMS/x86_64/ . -C ~/rpmbuild/SRPMS/ .
+cp $RIPPLED_VERSION.tar.gz /opt/rippled-rpm/out/
 
-RPM_MD5SUM=`rpm -Kv ~/rpmbuild/RPMS/x86_64/rippled-[0-9]*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
-DBG_MD5SUM=`rpm -Kv ~/rpmbuild/RPMS/x86_64/rippled-debuginfo*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
-SRC_MD5SUM=`rpm -Kv ~/rpmbuild/SRPMS/*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
+MD5SUM=`rpm -Kv ~/rpmbuild/RPMS/x86_64/*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
 
-echo "rpm_md5sum=$RPM_MD5SUM" > /opt/rippled-rpm/out/build_vars
-echo "dbg_md5sum=$DBG_MD5SUM" >> /opt/rippled-rpm/out/build_vars
-echo "src_md5sum=$SRC_MD5SUM" >> /opt/rippled-rpm/out/build_vars
+echo "md5sum=$MD5SUM" > /opt/rippled-rpm/out/build_vars
 echo "rippled_version=$RIPPLED_RPM_VERSION" >> /opt/rippled-rpm/out/build_vars
-echo "rpm_file_name=$tar_file" >> /opt/rippled-rpm/out/build_vars
+echo "rpm_file_name=$RIPPLED_VERSION.tar.gz" >> /opt/rippled-rpm/out/build_vars
