@@ -64,6 +64,7 @@ RUN git clone https://github.com/ripple/rippled.git
 COPY rippled.spec ./
 COPY rippled.service /root/rpmbuild/SOURCES/
 COPY 50-rippled.preset /root/rpmbuild/SOURCES/
+COPY update-rippled.sh /root/rpmbuild/SOURCES/
 
 # Import rippled dev public keys
 COPY public-keys.txt ./
