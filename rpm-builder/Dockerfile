@@ -38,8 +38,8 @@ RUN yum install -y boost boost-devel boost-static
 
 # Use Fedora EPEL for protobuf-static
 RUN yum install -y wget
-RUN wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
-RUN rpm -ivh epel-release-7-5.noarch.rpm
+RUN wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-6.noarch.rpm
+RUN rpm -ivh epel-release-7-6.noarch.rpm
 RUN yum install -y scons protobuf-devel protobuf-static
 
 # Update git
@@ -64,6 +64,7 @@ RUN git clone https://github.com/ripple/rippled.git
 COPY rippled.spec ./
 COPY rippled.service /root/rpmbuild/SOURCES/
 COPY 50-rippled.preset /root/rpmbuild/SOURCES/
+COPY update-rippled.sh /root/rpmbuild/SOURCES/
 
 # Import rippled dev public keys
 COPY public-keys.txt ./
