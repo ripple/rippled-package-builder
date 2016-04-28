@@ -32,8 +32,10 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_prefix}/
 echo "Installing to /opt/ripple/"
 install -D doc/rippled-example.cfg ${RPM_BUILD_ROOT}%{_prefix}/etc/rippled.cfg
+install -D doc/validators-example.txt ${RPM_BUILD_ROOT}%{_prefix}/etc/validators.txt
 install -d ${RPM_BUILD_ROOT}/etc/opt/ripple
 ln -s %{_prefix}/etc/rippled.cfg ${RPM_BUILD_ROOT}/etc/opt/ripple/rippled.cfg
+ln -s %{_prefix}/etc/validators.txt ${RPM_BUILD_ROOT}/etc/opt/ripple/validators.txt
 install -D build/gcc.release/rippled ${RPM_BUILD_ROOT}%{_bindir}/rippled
 install -D %{SOURCE1} ${RPM_BUILD_ROOT}/usr/lib/systemd/system/rippled.service
 install -D %{SOURCE2} ${RPM_BUILD_ROOT}/usr/lib/systemd/system-preset/50-rippled.preset
@@ -64,6 +66,8 @@ chmod 755 /var/lib/rippled/
 %{_bindir}/update-rippled.sh
 %config(noreplace) %{_prefix}/etc/rippled.cfg
 %config(noreplace) /etc/opt/ripple/rippled.cfg
+%config(noreplace) %{_prefix}/etc/validators.txt
+%config(noreplace) /etc/opt/ripple/validators.txt
 %config(noreplace) /usr/lib/systemd/system/rippled.service
 %config(noreplace) /usr/lib/systemd/system-preset/50-rippled.preset
 %config(noreplace) /etc/systemd/system/rippled.service.d/nofile_limit.conf
@@ -71,3 +75,5 @@ chmod 755 /var/lib/rippled/
 %dir /var/lib/rippled/
 
 %changelog
+* Thu Jun 02 2016 Brandon Wilson <bwilson@ripple.com>
+- Install validators.txt
