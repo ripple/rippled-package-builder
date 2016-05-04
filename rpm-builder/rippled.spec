@@ -14,6 +14,7 @@ Source0:        rippled.tar.gz
 Source1:        rippled.service
 Source2:        50-rippled.preset
 Source3:        update-rippled.sh
+Source4:        nofile_limit.conf
 
 BuildRequires:  scons boost-devel protobuf-devel openssl-devel
 
@@ -37,6 +38,8 @@ install -D build/gcc.release/rippled ${RPM_BUILD_ROOT}%{_bindir}/rippled
 install -D %{SOURCE1} ${RPM_BUILD_ROOT}/usr/lib/systemd/system/rippled.service
 install -D %{SOURCE2} ${RPM_BUILD_ROOT}/usr/lib/systemd/system-preset/50-rippled.preset
 install -D %{SOURCE3} ${RPM_BUILD_ROOT}%{_bindir}/update-rippled.sh
+install -d ${RPM_BUILD_ROOT}/etc/systemd/system/rippled.service.d/
+install -D %{SOURCE4} ${RPM_BUILD_ROOT}/etc/systemd/system/rippled.service.d/nofile_limit.conf
 
 install -d $RPM_BUILD_ROOT/var/log/rippled
 install -d $RPM_BUILD_ROOT/var/lib/rippled
@@ -63,6 +66,7 @@ chmod 755 /var/lib/rippled/
 %config(noreplace) /etc/opt/ripple/rippled.cfg
 %config(noreplace) /usr/lib/systemd/system/rippled.service
 %config(noreplace) /usr/lib/systemd/system-preset/50-rippled.preset
+%config(noreplace) /etc/systemd/system/rippled.service.d/nofile_limit.conf
 %dir /var/log/rippled/
 %dir /var/lib/rippled/
 
