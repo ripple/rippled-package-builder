@@ -5,12 +5,27 @@ function error {
   exit 1
 }
 
-GIT_BRANCH=${GIT_BRANCH-develop}
+GIT_REMOTE=${GIT_REMOTE-origin}
+
+if [ -z ${GIT_COMMIT+x} ]; then
+  GIT_BRANCH=${GIT_REMOTE}/${GIT_BRANCH-develop}
+else
+  GIT_BRANCH=$GIT_COMMIT
+fi
+
 RPM_RELEASE=${RPM_RELEASE-1}
 export RPM_RELEASE
 
 cd rippled
-git fetch origin
+
+if [ "$GIT_REMOTE" != "origin" ]; then
+  git remote add $GIT_REMOTE https://github.com/$GIT_REMOTE/rippled.git
+fi
+
+git fetch $GIT_REMOTE
+rc=$?; if [[ $rc != 0 ]]; then
+  error "error fetching $GIT_REMOTE"
+fi
 
 git checkout $GIT_BRANCH
 rc=$?; if [[ $rc != 0 ]]; then
