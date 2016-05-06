@@ -15,6 +15,8 @@ Writes `md5sum`, `rippled_version`, and `rpm_file_name` variables to `build_vars
 All configuration is performed via environment variables:
 
 - GIT_BRANCH:  rippled branch to package (default: develop)
+- GIT_COMMIT:  rippled commit to package (overrides GIT_BRANCH)
+- GIT_REMOTE:  rippled remote repository (default: origin)
 - RPM_RELEASE: rpm release number        (default: 1)
 
 ## Build
