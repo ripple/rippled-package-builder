@@ -49,6 +49,10 @@ cd ..
 
 tar -zcf ~/rpmbuild/SOURCES/rippled.tar.gz rippled/
 
+# Package manifest script
+pyinstaller --onefile --distpath /root/rpmbuild/SOURCES/ \
+  rippled/bin/python/Manifest.py
+
 rpmbuild -ba rippled.spec
 rc=$?; if [[ $rc != 0 ]]; then
   error "error building rpm"

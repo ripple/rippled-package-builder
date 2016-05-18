@@ -71,5 +71,9 @@ COPY nofile_limit.conf /root/rpmbuild/SOURCES/
 COPY public-keys.txt ./
 RUN gpg --import public-keys.txt
 
+# Install pyinstaller
+RUN yum install -y python-pip
+RUN pip install pyinstaller
+
 COPY build_rpm.sh ./
 CMD ./build_rpm.sh
