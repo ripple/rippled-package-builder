@@ -15,6 +15,7 @@ Source1:        rippled.service
 Source2:        50-rippled.preset
 Source3:        update-rippled.sh
 Source4:        nofile_limit.conf
+Source5:        configure-validator.sh
 
 BuildRequires:  scons boost-devel protobuf-devel openssl-devel
 
@@ -42,6 +43,7 @@ install -D %{SOURCE2} ${RPM_BUILD_ROOT}/usr/lib/systemd/system-preset/50-rippled
 install -D %{SOURCE3} ${RPM_BUILD_ROOT}%{_bindir}/update-rippled.sh
 install -d ${RPM_BUILD_ROOT}/etc/systemd/system/rippled.service.d/
 install -D %{SOURCE4} ${RPM_BUILD_ROOT}/etc/systemd/system/rippled.service.d/nofile_limit.conf
+install -D %{SOURCE5} ${RPM_BUILD_ROOT}%{_bindir}/configure-validator.sh
 
 install -d $RPM_BUILD_ROOT/var/log/rippled
 install -d $RPM_BUILD_ROOT/var/lib/rippled
@@ -64,6 +66,7 @@ chmod 755 /var/lib/rippled/
 %doc README.md LICENSE
 %{_bindir}/rippled
 %{_bindir}/update-rippled.sh
+%{_bindir}/configure-validator.sh
 %config(noreplace) %{_prefix}/etc/rippled.cfg
 %config(noreplace) /etc/opt/ripple/rippled.cfg
 %config(noreplace) %{_prefix}/etc/validators.txt
@@ -75,5 +78,8 @@ chmod 755 /var/lib/rippled/
 %dir /var/lib/rippled/
 
 %changelog
+* Fri Jun 03 2016 Brandon Wilson <bwilson@ripple.com>
+- Install configure-validator.sh
+
 * Thu Jun 02 2016 Brandon Wilson <bwilson@ripple.com>
 - Install validators.txt
