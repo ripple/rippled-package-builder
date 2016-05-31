@@ -4,7 +4,6 @@ machine:
 test:
   override:
     - docker build -t rippled-rpm-builder-centos7 rpm-builder/
-    - ./run_centos7_test.sh
 deployment:
   master:
     branch: master
@@ -12,3 +11,8 @@ deployment:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker tag -f rippled-rpm-builder-centos7 $DOCKER_USER/rippled-rpm-builder:centos7
       - docker push $DOCKER_USER/rippled-rpm-builder:centos7
+    branch: local-source
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker tag -f rippled-rpm-builder-centos7 $DOCKER_USER/rippled-rpm-builder:mount_src
+      - docker push $DOCKER_USER/rippled-rpm-builder:mount_src
