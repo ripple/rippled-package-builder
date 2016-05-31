@@ -2,7 +2,7 @@
 set -e
 
 # build centos7 rpm
-docker run -e GIT_BRANCH=release -v $PWD/test/:/opt/rippled-rpm/out rippled-rpm-builder-centos7
+docker run -v $PWD/test/:/opt/rippled-rpm/rippled rippled-rpm-builder-centos7
 
 # source properties
 . test/build_vars

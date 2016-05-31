@@ -3,7 +3,7 @@ set -e
 
 # build centos6 rpm
 docker build -t rippled-rpm-builder-centos6 rpm-builder-centos6/
-docker run -e RPM_RELEASE=3 -e GIT_BRANCH=release -v $PWD/test/:/opt/rippled-rpm/out rippled-rpm-builder-centos6
+docker run -e RPM_RELEASE=3 -v $PWD/test/:/opt/rippled-rpm/rippled rippled-rpm-builder-centos6
 
 # source properties
 . test/build_vars
@@ -19,7 +19,7 @@ centos:6
 
 # build centos7 rpm
 docker build -t rippled-rpm-builder-centos7 rpm-builder/
-docker run -e GIT_BRANCH=release -v $PWD/test/:/opt/rippled-rpm/out rippled-rpm-builder-centos7
+docker run -e GIT_BRANCH=release -v $PWD/test/:/opt/rippled-rpm/rippled rippled-rpm-builder-centos7
 
 # source properties
 . test/build_vars

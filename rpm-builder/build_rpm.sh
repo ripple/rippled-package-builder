@@ -5,33 +5,14 @@ function error {
   exit 1
 }
 
-GIT_REMOTE=${GIT_REMOTE-origin}
-
-if [ -z ${GIT_COMMIT+x} ]; then
-  GIT_BRANCH=${GIT_REMOTE}/${GIT_BRANCH-develop}
-else
-  GIT_BRANCH=$GIT_COMMIT
+if [ ! -d "rippled" ]; then
+  error "mount local rippled repo to Docker container"
 fi
 
 RPM_RELEASE=${RPM_RELEASE-1}
 export RPM_RELEASE
 
 cd rippled
-
-if [ "$GIT_REMOTE" != "origin" ]; then
-  git remote add $GIT_REMOTE https://github.com/$GIT_REMOTE/rippled.git
-fi
-
-git fetch $GIT_REMOTE
-rc=$?; if [[ $rc != 0 ]]; then
-  error "error fetching $GIT_REMOTE"
-fi
-
-git checkout $GIT_BRANCH
-rc=$?; if [[ $rc != 0 ]]; then
-  error "error checking out $GIT_BRANCH"
-fi
-git pull
 
 # Verify git commit signature
 COMMIT_SIGNER=`git verify-commit HEAD 2>&1 >/dev/null | grep 'Good signature from' | grep -oP '\"\K[^"]+'`
@@ -57,14 +38,16 @@ fi
 # Make a tar of the rpm and source rpm
 tar_file=$RIPPLED_VERSION-$RPM_RELEASE.tar.gz
 tar -zvcf $tar_file -C ~/rpmbuild/RPMS/x86_64/ . -C ~/rpmbuild/SRPMS/ .
-cp $tar_file /opt/rippled-rpm/out/
+cd rippled
+mkdir -p rpms
+cp ../$tar_file rpms/
 
 RPM_MD5SUM=`rpm -Kv ~/rpmbuild/RPMS/x86_64/rippled-[0-9]*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
 DBG_MD5SUM=`rpm -Kv ~/rpmbuild/RPMS/x86_64/rippled-debuginfo*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
 SRC_MD5SUM=`rpm -Kv ~/rpmbuild/SRPMS/*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
 
-echo "rpm_md5sum=$RPM_MD5SUM" > /opt/rippled-rpm/out/build_vars
-echo "dbg_md5sum=$DBG_MD5SUM" >> /opt/rippled-rpm/out/build_vars
-echo "src_md5sum=$SRC_MD5SUM" >> /opt/rippled-rpm/out/build_vars
-echo "rippled_version=$RIPPLED_RPM_VERSION" >> /opt/rippled-rpm/out/build_vars
-echo "rpm_file_name=$tar_file" >> /opt/rippled-rpm/out/build_vars
+echo "rpm_md5sum=$RPM_MD5SUM" > rpms/build_vars
+echo "dbg_md5sum=$DBG_MD5SUM" >> rpms/build_vars
+echo "src_md5sum=$SRC_MD5SUM" >> rpms/build_vars
+echo "rippled_version=$RIPPLED_RPM_VERSION" >> rpms/build_vars
+echo "rpm_file_name=$tar_file" >> rpms/build_vars

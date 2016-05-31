@@ -59,8 +59,6 @@ RUN yum install -y gcc gcc-c++ libstdc++-static --enablerepo=warning:fedora23
 RUN mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 RUN echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
 
-RUN git clone https://github.com/ripple/rippled.git
-
 COPY rippled.spec ./
 COPY rippled.service /root/rpmbuild/SOURCES/
 COPY 50-rippled.preset /root/rpmbuild/SOURCES/
