@@ -32,6 +32,15 @@ rc=$?; if [[ $rc != 0 ]]; then
   error "error installing rippled-$RIPPLED_VERSION rpm from $YUM_REPO"
 fi
 
+if [ ! -f /opt/ripple/etc/rippled.cfg ] || \
+   [ ! -f /opt/ripple/etc/validators.txt ] || \
+   [ ! -f /etc/opt/ripple/rippled.cfg ] || \
+   [ ! -f /etc/opt/ripple/validators.txt ]
+then
+    echo "\nMissing config file"
+    exit 1
+fi
+
 rpm -i rpms/rippled-*.src.rpm
 tar -zxf ~/rpmbuild/SOURCES/rippled.tar.gz -C ./
 cd rippled
