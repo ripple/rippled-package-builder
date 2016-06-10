@@ -9,8 +9,8 @@ fi
 
 # Check for validation key
 VALIDATION_PUBLIC_KEY=`/opt/ripple/bin/rippled server_info -q | \
-  python -c 'import json,sys;obj=json.load(sys.stdin);print obj["result"]["info"]["pubkey_validator"]'`
-
+  python -c 'import json,sys;obj=json.load(sys.stdin); \
+  print obj["result"]["info"]["pubkey_validator"]'`
 if [ "$VALIDATION_PUBLIC_KEY" != "none" ]; then
   echo "rippled already configured as a validator"
   exit 1
@@ -36,16 +36,18 @@ fi
 if [ -z "$MASTER_PUBLIC_KEY" ] || \
    [ -z "$MASTER_SECRET" ]
 then
-  echo "/opt/ripple/bin/manifest failed to  generate validator keys"
+  echo "/opt/ripple/bin/manifest failed to generate master validator keys"
   exit 1
 fi
 
 # Generate ephemeral validation keys
 VALIDATOR_KEYS=`/opt/ripple/bin/rippled validation_create -q`
 VALIDATION_SEED=`echo $VALIDATOR_KEYS | \
-  python -c 'import json,sys;obj=json.load(sys.stdin);print obj["result"]["validation_seed"]'`
+  python -c 'import json,sys;obj=json.load(sys.stdin); \
+  print obj["result"]["validation_seed"]'`
 VALIDATOR_PUBLIC_KEY=`echo $VALIDATOR_KEYS | \
-  python -c 'import json,sys;obj=json.load(sys.stdin);print obj["result"]["validation_public_key"]'`
+  python -c 'import json,sys;obj=json.load(sys.stdin); \
+  print obj["result"]["validation_public_key"]'`
 
 # Generate and sign validator manifest
 MANIFEST=`/opt/ripple/bin/manifest sign 1 $VALIDATOR_PUBLIC_KEY $MASTER_SECRET`
@@ -60,22 +62,25 @@ echo "
 $VALIDATION_SEED
 
 $MANIFEST
-
-#REMOVE ME
-[validator_keys]
-$MASTER_PUBLIC_KEY
 " >> /etc/opt/ripple/rippled.cfg
 
 systemctl restart rippled.service
 
 # Wait for rippled to start up
-while /opt/ripple/bin/rippled -q server_info | grep -q 'no response from server'
+END=$((SECONDS + 20))
+while /opt/ripple/bin/rippled -q server_info | \
+  grep -q 'no response from server'
 do
+  if [ $SECONDS -gt $END ]; then
+    echo "rippled failed to restart"
+    exit 1
+  fi
   sleep 1
 done
 
 EPHEMERAL_PUBLIC_KEY=`/opt/ripple/bin/rippled server_info -q | \
-  python -c 'import json,sys;obj=json.load(sys.stdin);print obj["result"]["info"]["pubkey_validator"]'`
+  python -c 'import json,sys;obj=json.load(sys.stdin); \
+  print obj["result"]["info"]["pubkey_validator"]'`
 
 if [ "$VALIDATOR_PUBLIC_KEY" != "$EPHEMERAL_PUBLIC_KEY" ]
 then

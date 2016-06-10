@@ -17,6 +17,7 @@ Source3:        update-rippled.sh
 Source4:        nofile_limit.conf
 Source5:        Manifest
 Source6:        configure-validator.sh
+Source7:        rotate-validator-keys.sh
 
 BuildRequires:  scons boost-devel protobuf-devel openssl-devel
 
@@ -44,6 +45,7 @@ install -d ${RPM_BUILD_ROOT}/etc/systemd/system/rippled.service.d/
 install -D %{SOURCE4} ${RPM_BUILD_ROOT}/etc/systemd/system/rippled.service.d/nofile_limit.conf
 install -D %{SOURCE5} ${RPM_BUILD_ROOT}%{_bindir}/manifest
 install -D %{SOURCE6} ${RPM_BUILD_ROOT}%{_bindir}/configure-validator.sh
+install -D %{SOURCE7} ${RPM_BUILD_ROOT}%{_bindir}/rotate-validator-keys.sh
 
 install -d $RPM_BUILD_ROOT/var/log/rippled
 install -d $RPM_BUILD_ROOT/var/lib/rippled
@@ -68,6 +70,7 @@ chmod 755 /var/lib/rippled/
 %{_bindir}/update-rippled.sh
 %{_bindir}/manifest
 %{_bindir}/configure-validator.sh
+%{_bindir}/rotate-validator-keys.sh
 %config(noreplace) %{_prefix}/etc/rippled.cfg
 %config(noreplace) /etc/opt/ripple/rippled.cfg
 %config(noreplace) /usr/lib/systemd/system/rippled.service
