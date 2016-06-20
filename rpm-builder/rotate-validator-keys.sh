@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# parseJSON <field>
+# reads JSON from stdin
+# returns value at <field>
+function parseJSON {
+  PARSE_SCRIPT=`printf "import json,sys;obj=json.load(sys.stdin); \
+  print obj%s" $1`
+  VALUE=`cat | python -c "$PARSE_SCRIPT" 2>$1` || exit 1
+
+  echo "$VALUE"
+}
+
 if [ -z $1 ]; then
   echo "rotate-validator-keys.sh <master-secret>"
   exit 1
@@ -15,40 +26,30 @@ then
 fi
 
 # Check for validation key
-VALIDATION_PUBLIC_KEY=`/opt/ripple/bin/rippled server_info -q | \
-  python -c 'import json,sys;obj=json.load(sys.stdin); \
-  print obj["result"]["info"]["pubkey_validator"]'`
+VALIDATION_PUBLIC_KEY=`/opt/ripple/bin/rippled -q server_info | \
+  parseJSON '["result"]["info"]["pubkey_validator"]'` || \
+  { echo "Error parsing server_info response"; exit 1; }
 
 if [ "$VALIDATION_PUBLIC_KEY" == "none" ]; then
   echo "rippled is not configured as a validator"
-  echo "Configure with /opt/ripple/bin/configure-validator"
+  echo "Configure with /opt/ripple/bin/configure-validator.sh"
   exit 1
 fi
 
-HAS_MANIFEST=`/opt/ripple/bin/rippled server_info -q | \
-  python -c 'import json,sys;obj=json.load(sys.stdin); \
-  print "validation_manifest" in obj["result"]["info"]'`
+MASTER_PUBLIC_KEY=`/opt/ripple/bin/rippled -q server_info | \
+  parseJSON '["result"]["info"]["validation_manifest"]["master_key"]'` || \
+  { echo "Cannot rotate validator keys"; \
+  echo "Configure with /opt/ripple/bin/configure-validator.sh"; \
+  exit 1; }
 
-if [ "$HAS_MANIFEST" == "False" ]; then
-  echo "Cannot rotate validator keys"
-  echo "Configure with /opt/ripple/bin/configure-validator"
-  exit 1
-fi
-
-MASTER_PUBLIC_KEY=`/opt/ripple/bin/rippled server_info -q | \
-  python -c 'import json,sys;obj=json.load(sys.stdin); \
-  print obj["result"]["info"]["validation_manifest"]["master_key"]'`
-
-SEQUENCE=`/opt/ripple/bin/rippled server_info -q | \
-  python -c 'import json,sys;obj=json.load(sys.stdin); \
-  print obj["result"]["info"]["validation_manifest"]["seq"]'`
+SEQUENCE=`/opt/ripple/bin/rippled -q server_info | \
+  parseJSON '["result"]["info"]["validation_manifest"]["seq"]'` || \
+  { echo "Error parsing server_info response"; exit 1; }
 
 # Generate master keys
-MASTER_KEYS=`/opt/ripple/bin/manifest create $MASTER_SECRET`
-if [ $? -ne 0 ]; then
-  echo "Error generating master keys. Does /opt/ripple/bin/manifest exist?"
-  exit 1
-fi
+MASTER_KEYS=`/opt/ripple/bin/manifest create $MASTER_SECRET` || \
+  { echo "Error generating master keys. Does /opt/ripple/bin/manifest exist?"; \
+  exit 1; }
 
 if [[ $MASTER_KEYS =~ n([rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz]){51} ]]
 then
@@ -65,19 +66,16 @@ fi
 # Generate ephemeral validation keys
 VALIDATOR_KEYS=`/opt/ripple/bin/rippled validation_create -q`
 VALIDATION_SEED=`echo $VALIDATOR_KEYS | \
-  python -c 'import json,sys;obj=json.load(sys.stdin); \
-  print obj["result"]["validation_seed"]'`
+  parseJSON '["result"]["validation_seed"]'` || \
+  { echo "Error parsing validation_create response"; exit 1; }
 VALIDATOR_PUBLIC_KEY=`echo $VALIDATOR_KEYS | \
-  python -c 'import json,sys;obj=json.load(sys.stdin); \
-  print obj["result"]["validation_public_key"]'`
+  parseJSON '["result"]["validation_public_key"]'` || \
+  { echo "Error parsing validation_create response"; exit 1; }
 
 # Generate and sign validator manifest
 MANIFEST=`/opt/ripple/bin/manifest sign $((SEQUENCE + 1)) \
-  $VALIDATOR_PUBLIC_KEY $MASTER_SECRET`
-if [ $? -ne 0 ]; then
-  echo "Error signing new manifest"
-  exit 1
-fi
+  $VALIDATOR_PUBLIC_KEY $MASTER_SECRET` || \
+  { echo "Error signing new manifest"; exit 1; }
 
 # Replace validation_seed
 sed -i "/\[validation_seed\]/{n;s/.*/$VALIDATION_SEED/}" \
@@ -105,9 +103,9 @@ do
   sleep 1
 done
 
-EPHEMERAL_PUBLIC_KEY=`/opt/ripple/bin/rippled server_info -q | \
-  python -c 'import json,sys;obj=json.load(sys.stdin); \
-  print obj["result"]["info"]["pubkey_validator"]'`
+EPHEMERAL_PUBLIC_KEY=`/opt/ripple/bin/rippled -q server_info | \
+  parseJSON '["result"]["info"]["pubkey_validator"]'` || \
+  { echo "Error parsing server_info response"; exit 1; }
 
 if [ "$VALIDATOR_PUBLIC_KEY" != "$EPHEMERAL_PUBLIC_KEY" ]
 then
