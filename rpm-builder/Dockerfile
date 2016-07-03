@@ -38,12 +38,23 @@ RUN yum install -y boost boost-devel boost-static
 
 # Use Fedora EPEL for protobuf-static
 RUN yum install -y wget
-RUN wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-9.noarch.rpm
-RUN rpm -ivh epel-release-7-9.noarch.rpm
+RUN wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm
+RUN rpm -ivh epel-release-7-10.noarch.rpm
 RUN yum install -y scons protobuf-devel protobuf-static
 
+# Install GCC 5
+RUN yum install -y gcc gcc-c++ libstdc++-static --enablerepo=fedora23
+
+# Install patched libstdc++
+COPY libstdc++-5.1.1-4.el7.centos.x86_64.rpm /root/rpmbuild/RPMS/x86_64/
+RUN rpm -Uvh --force --nodeps /root/rpmbuild/RPMS/x86_64/libstdc++-5.1.1-4.el7.centos.x86_64.rpm
+COPY libstdc++-devel-5.1.1-4.el7.centos.x86_64.rpm /root/rpmbuild/RPMS/x86_64/
+RUN rpm -Uvh --force --nodeps /root/rpmbuild/RPMS/x86_64/libstdc++-devel-5.1.1-4.el7.centos.x86_64.rpm
+COPY libstdc++-static-5.1.1-4.el7.centos.x86_64.rpm /root/rpmbuild/RPMS/x86_64/
+RUN rpm -Uvh --force /root/rpmbuild/RPMS/x86_64/libstdc++-static-5.1.1-4.el7.centos.x86_64.rpm
+
 # Update git
-RUN yum install -y rpm-sign autoconf libstdc++-devel bzip2-devel chrpath curl-devel expat-devel gettext-devel perl-devel libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
+RUN yum install -y rpm-sign autoconf bzip2-devel chrpath curl-devel expat-devel gettext-devel perl-devel libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
 RUN cd /usr/src && \
     wget https://www.kernel.org/pub/software/scm/git/git-2.6.2.tar.gz && \
     tar xzf git-2.6.2.tar.gz --owner root --group root --no-same-owner && \
@@ -52,9 +63,6 @@ RUN cd /usr/src && \
     ./configure --prefix=/usr && \
     make all && \
     make install
-
-# Install GCC 5
-RUN yum install -y gcc gcc-c++ libstdc++-static --enablerepo=fedora23
 
 RUN mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 RUN echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
