@@ -12,3 +12,9 @@ deployment:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker tag -f rippled-rpm-builder-centos7 $DOCKER_USER/rippled-rpm-builder:centos7
       - docker push $DOCKER_USER/rippled-rpm-builder:centos7
+  patched-libstdc++:
+    branch: patched-libstdc++
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker tag -f rippled-rpm-builder-centos7 $DOCKER_USER/rippled-rpm-builder:patched-libstdcpluplus
+      - docker push $DOCKER_USER/rippled-rpm-builder:patched-libstdcpluplus
