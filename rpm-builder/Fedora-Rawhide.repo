@@ -1,11 +1,23 @@
-[warning:rawhide]
-name=rawhide
+[rawhide]
+name=Fedora - Rawhide
+failovermethod=priority
+#baseurl=http://download.fedora.redhat.com/pub/fedora/linux/development/$basearch/os/
 mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=rawhide&arch=$basearch
 enabled=0
-gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-test file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora
 
-[warning:rawhide-source]
-name=rawhide
+[rawhide-debuginfo]
+name=Fedora - Rawhide - Debug
+failovermethod=priority
+#baseurl=http://download.fedora.redhat.com/pub/fedora/linux/development/$basearch/debug/
+mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=rawhide-debug&arch=$basearch
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-test file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora
+
+[rawhide-source]
+name=Fedora - Rawhide - Source
+failovermethod=priority
+#baseurl=http://download.fedora.redhat.com/pub/fedora/linux/development/source/SRPMS/
 mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=rawhide-source&arch=$basearch
 enabled=0
-gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-test file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora
