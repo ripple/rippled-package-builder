@@ -1,4 +1,4 @@
-FROM centos:latest
+FROM centos:7
 RUN mkdir /opt/rippled-rpm
 WORKDIR /opt/rippled-rpm
 
@@ -38,8 +38,8 @@ RUN yum install -y boost boost-devel boost-static
 
 # Use Fedora EPEL for protobuf-static
 RUN yum install -y wget
-RUN wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-7.noarch.rpm
-RUN rpm -ivh epel-release-7-7.noarch.rpm
+RUN wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
+RUN rpm -ivh epel-release-7-8.noarch.rpm
 RUN yum install -y scons protobuf-devel protobuf-static
 
 # Update git
@@ -69,7 +69,6 @@ COPY nofile_limit.conf /root/rpmbuild/SOURCES/
 
 # Import rippled dev public keys
 COPY public-keys.txt ./
-RUN gpg --import public-keys.txt
 
 COPY build_rpm.sh ./
 CMD ./build_rpm.sh

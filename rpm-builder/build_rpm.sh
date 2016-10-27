@@ -33,6 +33,9 @@ rc=$?; if [[ $rc != 0 ]]; then
 fi
 git pull
 
+# Import rippled dev public keys
+gpg --import /opt/rippled-rpm/public-keys.txt
+
 # Verify git commit signature
 COMMIT_SIGNER=`git verify-commit HEAD 2>&1 >/dev/null | grep 'Good signature from' | grep -oP '\"\K[^"]+'`
 if [ -z "$COMMIT_SIGNER" ]; then
