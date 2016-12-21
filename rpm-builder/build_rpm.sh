@@ -13,9 +13,6 @@ else
   GIT_BRANCH=$GIT_COMMIT
 fi
 
-RPM_RELEASE=${RPM_RELEASE-1}
-export RPM_RELEASE
-
 cd rippled
 
 if [ "$GIT_REMOTE" != "origin" ]; then
@@ -43,9 +40,25 @@ if [ -z "$COMMIT_SIGNER" ]; then
 fi
 RIPPLED_VERSION=$(egrep -i -o "\b(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9a-z\-]+(\.[0-9a-z\-]+)*)?(\+[0-9a-z\-]+(\.[0-9a-z\-]+)*)?\b" src/ripple/protocol/impl/BuildInfo.cpp)
 
-# Convert dashes to underscores in rippled version for rpm compatibility
-RIPPLED_RPM_VERSION=`echo "$RIPPLED_VERSION" | tr - _`
+IFS='-' read -r RIPPLED_RPM_VERSION RELEASE <<< "$RIPPLED_VERSION"
 export RIPPLED_RPM_VERSION
+
+RPM_RELEASE=${RPM_RELEASE-1}
+
+# post-release version
+if [ "hf" = "$(echo "$RELEASE" | cut -c -2)" ]; then
+  RPM_RELEASE="${RPM_RELEASE}.${RELEASE}"
+# pre-release version (-b or -rc)
+elif [[ $RELEASE ]]; then
+  RPM_RELEASE="0.${RPM_RELEASE}.${RELEASE}"
+fi
+
+export RPM_RELEASE
+
+if [[ $RPM_PATCH ]]; then
+  RPM_PATCH=".${RPM_PATCH}"
+  export RPM_PATCH
+fi
 
 # Build the rpm
 cd ..
@@ -58,7 +71,7 @@ rc=$?; if [[ $rc != 0 ]]; then
 fi
 
 # Make a tar of the rpm and source rpm
-tar_file=$RIPPLED_VERSION-$RPM_RELEASE.tar.gz
+tar_file=$RIPPLED_VERSION$RPM_PATCH.tar.gz
 tar -zvcf $tar_file -C ~/rpmbuild/RPMS/x86_64/ . -C ~/rpmbuild/SRPMS/ .
 cp $tar_file /opt/rippled-rpm/out/
 

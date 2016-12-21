@@ -18,6 +18,7 @@ All configuration is performed via environment variables:
 - GIT_COMMIT:  rippled commit to package (overrides GIT_BRANCH)
 - GIT_REMOTE:  rippled remote repository (default: origin)
 - RPM_RELEASE: rpm release number        (default: 1)
+- RPM_PATCH:   rpm patch number          (default: null)
 
 ## Build
 
