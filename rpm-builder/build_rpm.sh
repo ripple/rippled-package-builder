@@ -71,7 +71,9 @@ rc=$?; if [[ $rc != 0 ]]; then
 fi
 
 # Make a tar of the rpm and source rpm
-tar_file=$RIPPLED_VERSION$RPM_PATCH.tar.gz
+RPM_VERSION_RELEASE=`rpm -qp --qf='%{NAME}-%{VERSION}-%{RELEASE}' ~/rpmbuild/RPMS/x86_64/rippled-[0-9]*.rpm`
+tar_file=$RPM_VERSION_RELEASE.tar.gz
+
 tar -zvcf $tar_file -C ~/rpmbuild/RPMS/x86_64/ . -C ~/rpmbuild/SRPMS/ .
 cp $tar_file /opt/rippled-rpm/out/
 
@@ -84,3 +86,4 @@ echo "dbg_md5sum=$DBG_MD5SUM" >> /opt/rippled-rpm/out/build_vars
 echo "src_md5sum=$SRC_MD5SUM" >> /opt/rippled-rpm/out/build_vars
 echo "rippled_version=$RIPPLED_RPM_VERSION" >> /opt/rippled-rpm/out/build_vars
 echo "rpm_file_name=$tar_file" >> /opt/rippled-rpm/out/build_vars
+echo "rpm_version_release=$RPM_VERSION_RELEASE" >> /opt/rippled-rpm/out/build_vars
