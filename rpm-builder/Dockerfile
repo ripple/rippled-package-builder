@@ -5,7 +5,7 @@ WORKDIR /opt/rippled-rpm
 # Build OpenSSL rpm with secp256k1 curve support
 RUN yumdownloader --source openssl
 
-RUN yum install -y rpm-build gcc-c++ make krb5-devel zlib-devel
+RUN yum install -y rpm-build gcc-c++ make krb5-devel zlib-devel lksctp-tools-devel
 
 RUN mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 RUN echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
@@ -38,8 +38,8 @@ RUN yum install -y boost boost-devel boost-static
 
 # Use Fedora EPEL for protobuf-static
 RUN yum install -y wget
-RUN wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
-RUN rpm -ivh epel-release-7-8.noarch.rpm
+RUN wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-9.noarch.rpm
+RUN rpm -ivh epel-release-7-9.noarch.rpm
 RUN yum install -y scons protobuf-devel protobuf-static
 
 # Update git
