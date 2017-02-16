@@ -5,9 +5,7 @@ function error {
   exit 1
 }
 
-yum install -y make gcc-c++
-curl --silent --location https://rpm.nodesource.com/setup | bash -
-yum install -y yum-utils nodejs
+yum install -y yum-utils
 
 # Check rpm's md5sum
 mkdir rpms
@@ -41,19 +39,7 @@ then
     exit 1
 fi
 
-rpm -i rpms/rippled-*.src.rpm
-tar -zxf ~/rpmbuild/SOURCES/rippled.tar.gz -C ./
-cd rippled
-npm install
-mkdir build
-ln -s /opt/ripple/bin/rippled build/rippled
-
 /opt/ripple/bin/rippled --unittest
 rc=$?; if [[ $rc != 0 ]]; then
   error "rippled --unittest failed"
-fi
-
-npm test
-rc=$?; if [[ $rc != 0 ]]; then
-  error "npm test failed"
 fi
