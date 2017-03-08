@@ -17,7 +17,7 @@ Source2:        50-rippled.preset
 Source3:        update-rippled.sh
 Source4:        nofile_limit.conf
 
-BuildRequires:  scons boost-devel protobuf-devel openssl-devel
+BuildRequires:  scons boost-static protobuf-static openssl-static cmake
 
 %description
 rippled
@@ -26,7 +26,10 @@ rippled
 %setup -n rippled
 
 %build
-RIPPLED_OLD_GCC_ABI=0 scons %{?_smp_mflags} --static
+mkdir -p build/gcc.release
+cd build/gcc.release
+cmake ../.. -DCMAKE_BUILD_TYPE=Release -Dtarget=gcc.release -Dstatic=true -DCMAKE_VERBOSE_MAKEFILE=ON
+cmake --build . -- -j 4 verbose=1
 
 %install
 rm -rf $RPM_BUILD_ROOT
