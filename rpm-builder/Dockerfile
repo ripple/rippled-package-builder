@@ -24,6 +24,8 @@ RUN echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
 
 RUN git clone https://github.com/ripple/rippled.git
 
+RUN git clone https://github.com/ripple/validator-keys-tool.git
+
 COPY rippled.spec ./
 COPY rippled.service /root/rpmbuild/SOURCES/
 COPY 50-rippled.preset /root/rpmbuild/SOURCES/

@@ -51,3 +51,8 @@ fi
 rc=$?; if [[ $rc != 0 ]]; then
   error "rippled --unittest failed"
 fi
+
+/opt/ripple/bin/validator-keys --unittest
+rc=$?; if [[ $rc != 0 ]]; then
+  error "validator-keys --unittest failed"
+fi

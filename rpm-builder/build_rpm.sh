@@ -36,7 +36,7 @@ gpg --import /opt/rippled-rpm/public-keys.txt
 # Verify git commit signature
 COMMIT_SIGNER=`git verify-commit HEAD 2>&1 >/dev/null | grep 'Good signature from' | grep -oP '\"\K[^"]+'`
 if [ -z "$COMMIT_SIGNER" ]; then
-  error "git commit signature verification failed"
+  error "rippled git commit signature verification failed"
 fi
 RIPPLED_VERSION=$(egrep -i -o "\b(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9a-z\-]+(\.[0-9a-z\-]+)*)?(\+[0-9a-z\-]+(\.[0-9a-z\-]+)*)?\b" src/ripple/protocol/impl/BuildInfo.cpp)
 
@@ -60,10 +60,23 @@ if [[ $RPM_PATCH ]]; then
   export RPM_PATCH
 fi
 
+cd ../validator-keys-tool
+git fetch origin
+git checkout origin/master
+
+# Verify git commit signature
+COMMIT_SIGNER=`git verify-commit HEAD 2>&1 >/dev/null | grep 'Good signature from' | grep -oP '\"\K[^"]+'`
+if [ -z "$COMMIT_SIGNER" ]; then
+  error "validator-keys git commit signature verification failed"
+fi
+
+git submodule update --init --recursive
+
 # Build the rpm
 cd ..
 
 tar -zcf ~/rpmbuild/SOURCES/rippled.tar.gz rippled/
+tar -zcf ~/rpmbuild/SOURCES/validator-keys.tar.gz validator-keys-tool/
 
 rpmbuild -ba rippled.spec
 rc=$?; if [[ $rc != 0 ]]; then

@@ -12,10 +12,11 @@ Summary:        rippled daemon
 License:        MIT
 URL:            http://ripple.com/
 Source0:        rippled.tar.gz
-Source1:        rippled.service
-Source2:        50-rippled.preset
-Source3:        update-rippled.sh
-Source4:        nofile_limit.conf
+Source1:        validator-keys.tar.gz
+Source2:        rippled.service
+Source3:        50-rippled.preset
+Source4:        update-rippled.sh
+Source5:        nofile_limit.conf
 
 BuildRequires:  scons boost-static protobuf-static openssl-static cmake
 
@@ -23,9 +24,16 @@ BuildRequires:  scons boost-static protobuf-static openssl-static cmake
 rippled
 
 %prep
-%setup -n rippled
+%setup -c -n rippled -a 1
 
 %build
+cd rippled
+mkdir -p build/gcc.release
+cd build/gcc.release
+cmake ../.. -DCMAKE_BUILD_TYPE=Release -Dtarget=gcc.release -Dstatic=true -DCMAKE_VERBOSE_MAKEFILE=ON
+cmake --build . -- -j 4 verbose=1
+
+cd ../../../validator-keys-tool
 mkdir -p build/gcc.release
 cd build/gcc.release
 cmake ../.. -DCMAKE_BUILD_TYPE=Release -Dtarget=gcc.release -Dstatic=true -DCMAKE_VERBOSE_MAKEFILE=ON
@@ -35,17 +43,18 @@ cmake --build . -- -j 4 verbose=1
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_prefix}/
 echo "Installing to /opt/ripple/"
-install -D doc/rippled-example.cfg ${RPM_BUILD_ROOT}%{_prefix}/etc/rippled.cfg
-install -D doc/validators-example.txt ${RPM_BUILD_ROOT}%{_prefix}/etc/validators.txt
+install -D rippled/doc/rippled-example.cfg ${RPM_BUILD_ROOT}%{_prefix}/etc/rippled.cfg
+install -D rippled/doc/validators-example.txt ${RPM_BUILD_ROOT}%{_prefix}/etc/validators.txt
 install -d ${RPM_BUILD_ROOT}/etc/opt/ripple
 ln -s %{_prefix}/etc/rippled.cfg ${RPM_BUILD_ROOT}/etc/opt/ripple/rippled.cfg
 ln -s %{_prefix}/etc/validators.txt ${RPM_BUILD_ROOT}/etc/opt/ripple/validators.txt
-install -D build/gcc.release/rippled ${RPM_BUILD_ROOT}%{_bindir}/rippled
-install -D %{SOURCE1} ${RPM_BUILD_ROOT}/usr/lib/systemd/system/rippled.service
-install -D %{SOURCE2} ${RPM_BUILD_ROOT}/usr/lib/systemd/system-preset/50-rippled.preset
-install -D %{SOURCE3} ${RPM_BUILD_ROOT}%{_bindir}/update-rippled.sh
+install -D rippled/build/gcc.release/rippled ${RPM_BUILD_ROOT}%{_bindir}/rippled
+install -D validator-keys-tool/build/gcc.release/validator-keys ${RPM_BUILD_ROOT}%{_bindir}/validator-keys
+install -D %{SOURCE2} ${RPM_BUILD_ROOT}/usr/lib/systemd/system/rippled.service
+install -D %{SOURCE3} ${RPM_BUILD_ROOT}/usr/lib/systemd/system-preset/50-rippled.preset
+install -D %{SOURCE4} ${RPM_BUILD_ROOT}%{_bindir}/update-rippled.sh
 install -d ${RPM_BUILD_ROOT}/etc/systemd/system/rippled.service.d/
-install -D %{SOURCE4} ${RPM_BUILD_ROOT}/etc/systemd/system/rippled.service.d/nofile_limit.conf
+install -D %{SOURCE5} ${RPM_BUILD_ROOT}/etc/systemd/system/rippled.service.d/nofile_limit.conf
 
 install -d $RPM_BUILD_ROOT/var/log/rippled
 install -d $RPM_BUILD_ROOT/var/lib/rippled
@@ -65,9 +74,10 @@ chmod 755 /var/log/rippled/
 chmod 755 /var/lib/rippled/
 
 %files
-%doc README.md LICENSE
+%doc rippled/README.md rippled/LICENSE
 %{_bindir}/rippled
 %{_bindir}/update-rippled.sh
+%{_bindir}/validator-keys
 %config(noreplace) %{_prefix}/etc/rippled.cfg
 %config(noreplace) /etc/opt/ripple/rippled.cfg
 %config(noreplace) %{_prefix}/etc/validators.txt
