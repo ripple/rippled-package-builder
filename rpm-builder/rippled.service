@@ -4,7 +4,8 @@ Description=Ripple Daemon
 [Service]
 Type=simple
 ExecStart=/opt/ripple/bin/rippled --net --silent --conf /etc/opt/ripple/rippled.cfg
-ExecStop=/opt/ripple/bin/rippled --conf /etc/opt/ripple/rippled.cfg stop
+# Default KillSignal can be used if/when rippled handles SIGTERM
+KillSignal=SIGINT
 Restart=no
 User=rippled
 Group=rippled
