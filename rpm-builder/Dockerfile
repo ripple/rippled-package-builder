@@ -12,7 +12,7 @@ RUN echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
 
 RUN rpm -i openssl-*.src.rpm
 COPY ec_curve.c /root/rpmbuild/SOURCES/
-RUN rpmbuild --nocheck -bb $(rpm -E %_specdir)/openssl.spec
+RUN rpmbuild -bb $(rpm -E %_specdir)/openssl.spec
 
 # Install openssl
 RUN rpm -Uvh --force ~/rpmbuild/RPMS/x86_64/openssl-1.0.1e-*.x86_64.rpm ~/rpmbuild/RPMS/x86_64/openssl-libs-1.0.1e-*.x86_64.rpm ~/rpmbuild/RPMS/x86_64/openssl-devel-1.0.1e-*.x86_64.rpm ~/rpmbuild/RPMS/x86_64/openssl-static-1.0.1e-*.x86_64.rpm
