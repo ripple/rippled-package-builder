@@ -66,9 +66,15 @@ COPY rippled.service /root/rpmbuild/SOURCES/
 COPY 50-rippled.preset /root/rpmbuild/SOURCES/
 COPY update-rippled.sh /root/rpmbuild/SOURCES/
 COPY nofile_limit.conf /root/rpmbuild/SOURCES/
+COPY configure-validator.sh /root/rpmbuild/SOURCES/
+COPY rotate-validator-keys.sh /root/rpmbuild/SOURCES/
 
 # Import rippled dev public keys
 COPY public-keys.txt ./
+
+# Install pyinstaller
+RUN yum install -y python-pip
+RUN pip install pyinstaller
 
 COPY build_rpm.sh ./
 CMD ./build_rpm.sh
