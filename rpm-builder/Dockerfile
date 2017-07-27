@@ -2,7 +2,7 @@ FROM fedora:25
 RUN mkdir /opt/rippled-rpm
 WORKDIR /opt/rippled-rpm
 
-RUN yum install -y boost-static protobuf-static gcc-c++ libstdc++-static git scons cmake rpm-build gnupg
+RUN yum install -y boost-static protobuf-static gcc-c++ libstdc++-static git zlib-static cmake rpm-build gnupg
 
 # Build openssl without krb5 and zlib
 RUN yum install -y yum-utils krb5-devel lksctp-tools-devel perl-generators
