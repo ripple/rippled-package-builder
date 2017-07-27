@@ -32,8 +32,5 @@ COPY 50-rippled.preset /root/rpmbuild/SOURCES/
 COPY update-rippled.sh /root/rpmbuild/SOURCES/
 COPY nofile_limit.conf /root/rpmbuild/SOURCES/
 
-# Import rippled dev public keys
-COPY public-keys.txt ./
-
 COPY build_rpm.sh ./
 CMD ./build_rpm.sh

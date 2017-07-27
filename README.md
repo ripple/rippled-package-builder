@@ -6,6 +6,8 @@ The rpm-builder docker container builds a rippled rpm from the specified git bra
 
 Writes `md5sum`, `rippled_version`, and `rpm_file_name` variables to `build_vars` properties file in mounted directory.
 
+To verify git commit signature, a file of whitelisted GPG public keys can be mounted to `/opt/rippled-rpm/public-keys.txt`
+
 ## Dependencies
 
 - docker
@@ -30,6 +32,11 @@ docker build -t rippled-rpm-builder rpm-builder/
 
 ```
 docker run -e GIT_BRANCH=develop -v <path-to-out-dir>:/opt/rippled-rpm/out rippled-rpm-builder
+```
+
+## Run with commit signature verification
+```
+docker run -e GIT_BRANCH=develop -v <path-to-keys-file>:/opt/rippled-rpm/public-keys.txt -v <path-to-out-dir>:/opt/rippled-rpm/out rippled-rpm-builder
 ```
 
 ## Test

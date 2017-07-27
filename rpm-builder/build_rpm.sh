@@ -31,13 +31,16 @@ fi
 git pull
 
 # Import rippled dev public keys
-gpg --import /opt/rippled-rpm/public-keys.txt
+if [ -e /opt/rippled-rpm/public-keys.txt ]; then
+  gpg --import /opt/rippled-rpm/public-keys.txt
 
-# Verify git commit signature
-COMMIT_SIGNER=`git verify-commit HEAD 2>&1 >/dev/null | grep 'Good signature from' | grep -oP '\"\K[^"]+'`
-if [ -z "$COMMIT_SIGNER" ]; then
-  error "rippled git commit signature verification failed"
+  # Verify git commit signature
+  COMMIT_SIGNER=`git verify-commit HEAD 2>&1 >/dev/null | grep 'Good signature from' | grep -oP '\"\K[^"]+'`
+  if [ -z "$COMMIT_SIGNER" ]; then
+    error "rippled git commit signature verification failed"
+  fi
 fi
+
 RIPPLED_VERSION=$(egrep -i -o "\b(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9a-z\-]+(\.[0-9a-z\-]+)*)?(\+[0-9a-z\-]+(\.[0-9a-z\-]+)*)?\b" src/ripple/protocol/impl/BuildInfo.cpp)
 
 IFS='-' read -r RIPPLED_RPM_VERSION RELEASE <<< "$RIPPLED_VERSION"
@@ -64,10 +67,12 @@ cd ../validator-keys-tool
 git fetch origin
 git checkout origin/master
 
-# Verify git commit signature
-COMMIT_SIGNER=`git verify-commit HEAD 2>&1 >/dev/null | grep 'Good signature from' | grep -oP '\"\K[^"]+'`
-if [ -z "$COMMIT_SIGNER" ]; then
-  error "validator-keys git commit signature verification failed"
+if [ -e /opt/rippled-rpm/public-keys.txt ]; then
+  # Verify git commit signature
+  COMMIT_SIGNER=`git verify-commit HEAD 2>&1 >/dev/null | grep 'Good signature from' | grep -oP '\"\K[^"]+'`
+  if [ -z "$COMMIT_SIGNER" ]; then
+    error "validator-keys git commit signature verification failed"
+  fi
 fi
 
 git submodule update --init --recursive
