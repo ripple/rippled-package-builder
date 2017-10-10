@@ -39,6 +39,9 @@ cd build/gcc.release
 cmake ../.. -DCMAKE_BUILD_TYPE=Release -Dtarget=gcc.release -Dstatic=true -DCMAKE_VERBOSE_MAKEFILE=ON
 cmake --build . -- -j 4 verbose=1
 
+%pre
+test -e /etc/pki/tls || ln -s /usr/lib/ssl /etc/pki/tls
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_prefix}/
