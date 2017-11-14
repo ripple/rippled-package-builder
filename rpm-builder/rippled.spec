@@ -40,7 +40,7 @@ cmake ../.. -DCMAKE_BUILD_TYPE=Release -Dtarget=gcc.release -Dstatic=true -DCMAK
 cmake --build . -- -j 4 verbose=1
 
 %pre
-test -e /etc/pki/tls || ln -s /usr/lib/ssl /etc/pki/tls
+test -e /etc/pki/tls || { mkdir -p /etc/pki; ln -s /usr/lib/ssl /etc/pki/tls; }
 
 %install
 rm -rf $RPM_BUILD_ROOT
