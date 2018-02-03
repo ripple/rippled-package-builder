@@ -95,9 +95,9 @@ tar_file=$RPM_VERSION_RELEASE.tar.gz
 tar -zvcf $tar_file -C ~/rpmbuild/RPMS/x86_64/ . -C ~/rpmbuild/SRPMS/ .
 cp $tar_file /opt/rippled-rpm/out/
 
-RPM_MD5SUM=`rpm -Kv ~/rpmbuild/RPMS/x86_64/rippled-[0-9]*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
-DBG_MD5SUM=`rpm -Kv ~/rpmbuild/RPMS/x86_64/rippled-debuginfo*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
-SRC_MD5SUM=`rpm -Kv ~/rpmbuild/SRPMS/*.rpm | grep 'MD5 digest' | grep -oP '\(\K[^)]+'`
+RPM_MD5SUM=`rpm -q --queryformat '%{SIGMD5}\n' ~/rpmbuild/RPMS/x86_64/rippled-[0-9]*.rpm 2> /dev/null`
+DBG_MD5SUM=`rpm -q --queryformat '%{SIGMD5}\n' ~/rpmbuild/RPMS/x86_64/rippled-debuginfo*.rpm 2> /dev/null`
+SRC_MD5SUM=`rpm -q --queryformat '%{SIGMD5}\n' ~/rpmbuild/SRPMS/*.rpm 2> /dev/null`
 
 RPM_SHA256="$(sha256sum ~/rpmbuild/RPMS/x86_64/rippled-[0-9]*.rpm | awk '{ print $1}')"
 DBG_SHA256="$(sha256sum ~/rpmbuild/RPMS/x86_64/rippled-debuginfo*.rpm | awk '{ print $1}')"
