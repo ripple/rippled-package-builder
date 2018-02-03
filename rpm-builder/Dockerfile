@@ -1,24 +1,16 @@
-FROM fedora:25
+FROM fedora:27
 RUN mkdir /opt/rippled-rpm
 WORKDIR /opt/rippled-rpm
 
-RUN yum install -y boost-static protobuf-static gcc-c++ libstdc++-static git zlib-static cmake rpm-build gnupg
+RUN yum install -y openssl-static protobuf-static gcc-c++ libstdc++-static git zlib-static cmake rpm-build gnupg
 
-# Build openssl without krb5 and zlib
-RUN yum install -y yum-utils krb5-devel lksctp-tools-devel perl-generators
-RUN yumdownloader --source openssl
-RUN mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-RUN echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
+# Install boost 1.66
+COPY Fedora-Rawhide.repo /etc/yum.repos.d/
+RUN yum install -y --disablerepo=* --enablerepo=rawhide boost-static
 
-RUN rpm -i openssl-*.src.rpm
-COPY openssl.spec.sha256sum ./
-RUN sha256sum --check openssl.spec.sha256sum
-COPY openssl.spec /root/rpmbuild/SPECS/
-RUN rpmbuild --nocheck -bb $(rpm -E %_specdir)/openssl.spec
+# Do not use boost's gcc 8
+RUN yum downgrade -y gcc-7.2.1-2.fc27
 
-RUN rpm -Uvh --force ~/rpmbuild/RPMS/x86_64/openssl-1.0.2k-*.x86_64.rpm ~/rpmbuild/RPMS/x86_64/openssl-libs-1.0.2k-*.x86_64.rpm ~/rpmbuild/RPMS/x86_64/openssl-devel-1.0.2k-*.x86_64.rpm ~/rpmbuild/RPMS/x86_64/openssl-static-1.0.2k-*.x86_64.rpm
-
-RUN rm -r ~/rpmbuild/*
 RUN mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 RUN echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
 
