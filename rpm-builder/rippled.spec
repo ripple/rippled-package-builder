@@ -30,13 +30,13 @@ cd rippled
 mkdir -p build/gcc.release
 cd build/gcc.release
 cmake ../.. -DCMAKE_BUILD_TYPE=Release -Dtarget=gcc.release -Dstatic=true -DCMAKE_VERBOSE_MAKEFILE=ON
-cmake --build . -- -j 4 verbose=1
+cmake --build . -- -j 2 verbose=1
 
 cd ../../../validator-keys-tool
 mkdir -p build/gcc.release
 cd build/gcc.release
 cmake ../.. -DCMAKE_BUILD_TYPE=Release -Dtarget=gcc.release -Dstatic=true -DCMAKE_VERBOSE_MAKEFILE=ON
-cmake --build . -- -j 4 verbose=1
+cmake --build . -- -j 2 verbose=1
 
 %pre
 test -e /etc/pki/tls || { mkdir -p /etc/pki; ln -s /usr/lib/ssl /etc/pki/tls; }
