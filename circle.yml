@@ -3,8 +3,7 @@ machine:
     - docker
 test:
   override:
-    - docker build -t rippled-rpm-builder-centos7 rpm-builder/
-    - ./run_centos7_test.sh
+    - ./run_test.sh
 deployment:
   master:
     branch: master
