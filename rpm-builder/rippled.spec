@@ -45,8 +45,8 @@ test -e /etc/pki/tls || { mkdir -p /etc/pki; ln -s /usr/lib/ssl /etc/pki/tls; }
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_prefix}/
 echo "Installing to /opt/ripple/"
-install -D rippled/doc/rippled-example.cfg ${RPM_BUILD_ROOT}%{_prefix}/etc/rippled.cfg
-install -D rippled/doc/validators-example.txt ${RPM_BUILD_ROOT}%{_prefix}/etc/validators.txt
+install -D rippled/cfg/rippled-example.cfg ${RPM_BUILD_ROOT}%{_prefix}/etc/rippled.cfg
+install -D rippled/cfg/validators-example.txt ${RPM_BUILD_ROOT}%{_prefix}/etc/validators.txt
 install -d ${RPM_BUILD_ROOT}/etc/opt/ripple
 ln -s %{_prefix}/etc/rippled.cfg ${RPM_BUILD_ROOT}/etc/opt/ripple/rippled.cfg
 ln -s %{_prefix}/etc/validators.txt ${RPM_BUILD_ROOT}/etc/opt/ripple/validators.txt
