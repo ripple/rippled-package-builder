@@ -2,7 +2,16 @@ FROM fedora:27
 RUN mkdir /opt/rippled-rpm
 WORKDIR /opt/rippled-rpm
 
-RUN yum install -y boost-static openssl-static protobuf-static gcc-c++ libstdc++-static git zlib-static cmake rpm-build gnupg
+RUN yum install -y openssl-static protobuf-static gcc-c++ libstdc++-static git zlib-static cmake rpm-build gnupg wget which
+
+RUN wget https://dl.bintray.com/boostorg/release/1.67.0/source/boost_1_67_0.tar.gz && \
+    tar -xzf boost_1_67_0.tar.gz && \
+    cd boost_1_67_0 && \
+    ./bootstrap.sh && \
+    ./b2 link=static -j2 install && \
+    cd .. && \
+    rm boost_1_67_0.tar.gz && \
+    rm -r boost_1_67_0
 
 RUN mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 RUN echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros

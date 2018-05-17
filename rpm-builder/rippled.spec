@@ -17,7 +17,7 @@ Source3:        50-rippled.preset
 Source4:        update-rippled.sh
 Source5:        nofile_limit.conf
 
-BuildRequires:  boost-static protobuf-static openssl-static cmake zlib-static
+BuildRequires:  protobuf-static openssl-static cmake zlib-static
 
 %description
 rippled

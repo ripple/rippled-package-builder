@@ -3,7 +3,7 @@ set -e
 
 # build rpm
 docker build -t rippled-rpm-builder rpm-builder/
-docker run -e GIT_BRANCH=release -v $PWD/test/:/opt/rippled-rpm/out rippled-rpm-builder
+docker run -e GIT_BRANCH=develop -v $PWD/test/:/opt/rippled-rpm/out rippled-rpm-builder
 
 # source properties
 . test/build_vars
@@ -24,14 +24,21 @@ centos:latest
 
 # test Ubuntu 16.04 rpm
 docker run \
--e "RPM_FILE_NAME=$rpm_file_name" \
+-e "RPM_FILE_NAME=$rpm_file_name" --rm \
 -v $PWD/test:/opt/rippled/in --entrypoint /opt/rippled/in/test_ubuntu_rpm.sh \
 -w /opt/rippled \
 ubuntu:16.04
 
-# test Ubuntu 17.04 rpm
+# test Ubuntu 17.10 rpm
 docker run \
--e "RPM_FILE_NAME=$rpm_file_name" \
+-e "RPM_FILE_NAME=$rpm_file_name" --rm \
 -v $PWD/test:/opt/rippled/in --entrypoint /opt/rippled/in/test_ubuntu_rpm.sh \
 -w /opt/rippled \
-ubuntu:17.04
+ubuntu:17.10
+
+# test Ubuntu 18.04 rpm
+docker run \
+-e "RPM_FILE_NAME=$rpm_file_name" --rm \
+-v $PWD/test:/opt/rippled/in --entrypoint /opt/rippled/in/test_ubuntu_rpm.sh \
+-w /opt/rippled \
+ubuntu:18.04
