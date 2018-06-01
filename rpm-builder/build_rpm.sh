@@ -24,6 +24,9 @@ rc=$?; if [[ $rc != 0 ]]; then
   error "error fetching $GIT_REMOTE"
 fi
 
+# fetch again, including remotes...but ok if this fails for some reason
+git fetch $GIT_REMOTE "+refs/pull/*/head:refs/remotes/origin/pr/*"
+
 git checkout $GIT_BRANCH
 rc=$?; if [[ $rc != 0 ]]; then
   error "error checking out $GIT_BRANCH"
