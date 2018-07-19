@@ -1,8 +1,8 @@
-FROM fedora:27
+FROM fedora:28
 RUN mkdir /opt/rippled-rpm
 WORKDIR /opt/rippled-rpm
 
-RUN yum install -y openssl-static protobuf-static gcc-c++ libstdc++-static git zlib-static cmake rpm-build gnupg wget which
+RUN yum install -y openssl-static protobuf-static gcc-c++ libstdc++-static git zlib-static cmake rpm-build gnupg wget which make
 
 RUN wget https://dl.bintray.com/boostorg/release/1.67.0/source/boost_1_67_0.tar.gz && \
     tar -xzf boost_1_67_0.tar.gz && \
