@@ -22,6 +22,14 @@ BuildRequires:  protobuf-static openssl-static cmake zlib-static
 %description
 rippled
 
+%package devel
+Summary: Files for development of applications using xrpl core library
+Group: Development/Libraries
+Requires: openssl-static%{?_isa}, zlib-static%{?_isa}
+
+%description devel
+core library for development of standalone applications that sign transactions.
+
 %prep
 %setup -c -n rippled -a 1
 
@@ -29,7 +37,7 @@ rippled
 cd rippled
 mkdir -p build/gcc.release
 cd build/gcc.release
-cmake ../.. -DCMAKE_BUILD_TYPE=Release -Dtarget=gcc.release -Dstatic=true -DCMAKE_VERBOSE_MAKEFILE=ON
+cmake ../.. -DCMAKE_INSTALL_PREFIX=%{_prefix} -DCMAKE_BUILD_TYPE=Release -Dstatic=true -DCMAKE_VERBOSE_MAKEFILE=ON
 cmake --build . -- -j 2 verbose=1
 
 cd ../../../validator-keys-tool
@@ -45,12 +53,12 @@ test -e /etc/pki/tls || { mkdir -p /etc/pki; ln -s /usr/lib/ssl /etc/pki/tls; }
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_prefix}/
 echo "Installing to /opt/ripple/"
-install -D rippled/cfg/rippled-example.cfg ${RPM_BUILD_ROOT}%{_prefix}/etc/rippled.cfg
-install -D rippled/cfg/validators-example.txt ${RPM_BUILD_ROOT}%{_prefix}/etc/validators.txt
+cd rippled/build/gcc.release
+make DESTDIR=$RPM_BUILD_ROOT install
+cd ../../..
 install -d ${RPM_BUILD_ROOT}/etc/opt/ripple
 ln -s %{_prefix}/etc/rippled.cfg ${RPM_BUILD_ROOT}/etc/opt/ripple/rippled.cfg
 ln -s %{_prefix}/etc/validators.txt ${RPM_BUILD_ROOT}/etc/opt/ripple/validators.txt
-install -D rippled/build/gcc.release/rippled ${RPM_BUILD_ROOT}%{_bindir}/rippled
 install -D validator-keys-tool/build/gcc.release/validator-keys ${RPM_BUILD_ROOT}%{_bindir}/validator-keys
 install -D %{SOURCE2} ${RPM_BUILD_ROOT}/usr/lib/systemd/system/rippled.service
 install -D %{SOURCE3} ${RPM_BUILD_ROOT}/usr/lib/systemd/system-preset/50-rippled.preset
@@ -90,6 +98,15 @@ chmod 755 /var/lib/rippled/
 %dir /var/log/rippled/
 %dir /var/lib/rippled/
 
+%files devel
+%{_prefix}/include
+%{_prefix}/lib/*.a
+%{_prefix}/lib/cmake/ripple
+
 %changelog
+* Wed Aug 01 2018 Mike Ellery <mellery451@gmail.com>
+- add devel package for signing library
+
 * Thu Jun 02 2016 Brandon Wilson <bwilson@ripple.com>
 - Install validators.txt
+

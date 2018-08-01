@@ -100,17 +100,21 @@ cp $tar_file /opt/rippled-rpm/out/
 
 RPM_MD5SUM=`rpm -q --queryformat '%{SIGMD5}\n' ~/rpmbuild/RPMS/x86_64/rippled-[0-9]*.rpm 2> /dev/null`
 DBG_MD5SUM=`rpm -q --queryformat '%{SIGMD5}\n' ~/rpmbuild/RPMS/x86_64/rippled-debuginfo*.rpm 2> /dev/null`
+DEV_MD5SUM=`rpm -q --queryformat '%{SIGMD5}\n' ~/rpmbuild/RPMS/x86_64/rippled-devel*.rpm 2> /dev/null`
 SRC_MD5SUM=`rpm -q --queryformat '%{SIGMD5}\n' ~/rpmbuild/SRPMS/*.rpm 2> /dev/null`
 
 RPM_SHA256="$(sha256sum ~/rpmbuild/RPMS/x86_64/rippled-[0-9]*.rpm | awk '{ print $1}')"
 DBG_SHA256="$(sha256sum ~/rpmbuild/RPMS/x86_64/rippled-debuginfo*.rpm | awk '{ print $1}')"
+DEV_SHA256="$(sha256sum ~/rpmbuild/RPMS/x86_64/rippled-devel*.rpm | awk '{ print $1}')"
 SRC_SHA256="$(sha256sum ~/rpmbuild/SRPMS/*.rpm | awk '{ print $1}')"
 
 echo "rpm_md5sum=$RPM_MD5SUM" > /opt/rippled-rpm/out/build_vars
 echo "dbg_md5sum=$DBG_MD5SUM" >> /opt/rippled-rpm/out/build_vars
+echo "dev_md5sum=$DEV_MD5SUM" >> /opt/rippled-rpm/out/build_vars
 echo "src_md5sum=$SRC_MD5SUM" >> /opt/rippled-rpm/out/build_vars
 echo "rpm_sha256=$RPM_SHA256" >> /opt/rippled-rpm/out/build_vars
 echo "dbg_sha256=$DBG_SHA256" >> /opt/rippled-rpm/out/build_vars
+echo "dev_sha256=$DEV_SHA256" >> /opt/rippled-rpm/out/build_vars
 echo "src_sha256=$SRC_SHA256" >> /opt/rippled-rpm/out/build_vars
 echo "rippled_version=$RIPPLED_RPM_VERSION" >> /opt/rippled-rpm/out/build_vars
 echo "rpm_file_name=$tar_file" >> /opt/rippled-rpm/out/build_vars
