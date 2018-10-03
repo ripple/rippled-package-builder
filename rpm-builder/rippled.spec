@@ -25,7 +25,7 @@ rippled
 %package devel
 Summary: Files for development of applications using xrpl core library
 Group: Development/Libraries
-Requires: openssl-static%{?_isa}, zlib-static%{?_isa}
+Requires: openssl-static, zlib-static
 
 %description devel
 core library for development of standalone applications that sign transactions.
