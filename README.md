@@ -1,3 +1,12 @@
+
+# DEPRECATED
+
+This repository is now deprecated. The files here were used for
+building RPM packages of [rippled](https://github.com/ripple/rippled) versions
+1.2 an earlier. For rippled 1.3+ release, the packaging files (including docker
+definitions, cmake targets, etc.) are included in the rippled repository
+itself.
+
 # Rippled Package Builder
 
 Docker image for building rippled rpms
